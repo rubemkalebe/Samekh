@@ -1,31 +1,28 @@
-# define o compilador a ser utilizado
-CP=gcc
-
-# utilizada para adicionar opcoes a compilacao
-COPT=-ll -o
-
-# variavel para pasta 'src/'
-SRC=src/
-
-# variavel para pasta 'obj/'
-OBJ=obj/
-
-# variavel para pasta 'include/'
-INC=include/
-
-# variavel para lex
+# DEFINIÇÃO DAS VARIÁVEIS ( OPCIONAL )
 LEX=flex
+YACC=yacc
+CC=gcc
+CP=g++
+LEXFILE=lexer.l
+LEXPARAM=-ll
+YACCPARAM=-d
+YACCFILE=parser.y
+EXECUTABLE=parserTest
 
-scanner: $(OBJ)lex.yy.o
-	$(CP) $(SRC)scanner.c $(OBJ)lex.yy.o -I $(INC) $(COPT) scanner
+main: lex.yy.o
+	$(CP) lex.yy.o parserTest.cpp -o $(EXECUTABLE)
 
-$(OBJ)lex.yy.o: $(SRC)lex.yy.c
-	$(CP) -c -I $(INC) $(SRC)lex.yy.c -o $(OBJ)lex.yy.o
+lex.yy.o: parser
+	$(CC) -c lex.yy.c -o lex.yy.o
 
-$(SRC)lex.yy.c: $(SRC)g+-.l
-	$(LEX) -o $(SRC)lex.yy.c $<
+parser: parser.y lexer
+	$(YACC) $(YACCPARAM) $(YACCFILE) -o parser.cpp
+
+lexer: lexer.l
+	$(LEX) $(LEXFILE)
 
 clean:
-	rm scanner
-	rm $(OBJ)lex.yy.o
-	rm $(SRC)lex.yy.c
+	rm lex.yy.c
+	rm lex.yy.o
+	rm parser.hpp
+	rm parser.cpp

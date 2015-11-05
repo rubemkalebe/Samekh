@@ -8,7 +8,7 @@
 %{
 #include <stdio.h>
 #include <stdlib.h>
-#include "y.tab.h"
+#include "parser.hpp"
 
 int	octal(char *str);
 
@@ -71,29 +71,29 @@ void lineComment(); // foi substituida pela regex
 "struct"				return STRUCT;
 "union"					return UNION;
 
-"("							return LPAREN;
-")"							return RPAREN;
-"["							return LSQPAREN;
-"]"							return RSQPAREN;
-"{"							return LBRACE;
-"}"							return RBRACE;
+"("							return L_PAREN;
+")"							return R_PAREN;
+"["							return L_SQ_PAREN;
+"]"							return R_SQ_PAREN;
+"{"							return L_BRACE;
+"}"							return R_BRACE;
 
 ";"							return SEMICOLON;
 "."							return DOT;
 ","							return COMMA;
 
 "="							return ASSIGN;
-"<"							return LT;
-">"							return GT;
-"<="						return LET;
-">="						return GET;
+"<"							return OP_LT;
+">"							return OP_GT;
+"<="						return OP_LET;
+">="						return OP_GET;
 "=="						return OP_EQ;
 "!="						return OP_NE;
-"+"							return PLUS;
-"-"							return MINUS;
-"*"							return ASTERISK;
-"/"							return DIV;
-"%"							return MOD;
+"+"							return OP_PLUS;
+"-"							return OP_MINUS;
+"*"							return OP_ASTERISK;
+"/"							return OP_DIV;
+"%"							return OP_MOD;
 "+="						return ASSIGN_PLUS;
 "-="						return ASSIGN_MINUS;
 "*="						return ASSIGN_PRODUCT;
