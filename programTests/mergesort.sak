@@ -1,0 +1,58 @@
+/* Programa feito para contar o numero de trocas entre os elementos de um vetor a fim de obter uma sequencia ordenada. 
+    Contem erro, nos operadores de incremento
+*/
+
+long swaps;
+
+procedure Merge(long a[], long temp[], long low, long high)
+    long mid = (high + low) / 2;
+    long i = low;
+    long j = mid + 1;
+    long k = low;
+    
+    while(i <= mid && j <= high)
+        if(a[i] <= a[j])
+            temp[k++] = a[i++];
+        else
+            temp[k++] = a[j++];
+            swaps += (mid - i + 1); // numero de posicoes que 'pulou'
+        endif
+    endwhile
+    
+    while(i <= mid)
+    	temp[k++] = a[i++];
+    endwhile
+    
+    while(j <= high)
+    	temp[k++] = a[j++];
+    endwhile
+    
+    for(long z = low; z <= high; z++)
+    	a[z] = temp[z];
+    endfor
+endprocedure
+
+procedure MergeSort(long a[], long temp[], long low, long high)
+    if(low < high)
+        long mid = (low + high) / 2;
+        MergeSort(a, temp, low, mid);
+        MergeSort(a, temp, mid + 1, high);
+        Merge(a, temp, low, high);
+    endif
+endprocedure
+
+procedure main()
+    long n;
+    
+    while(read("%l", n) && n != 0)
+        long a[n], t[n];
+        for(int i = 1; i <= n; i++)
+            read("%l", a[i]);
+        endfor
+        swaps = 0;
+        MergeSort(a, t, 1, n);
+        println(swaps);
+    endwhile
+    
+    return EXIT_SUCCESS;
+endprocedure

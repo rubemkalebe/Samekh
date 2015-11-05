@@ -1,0 +1,17 @@
+procedure swap(auto &a, auto &b)
+    auto tmp = a;
+    a = b;
+    b = tmp;
+endprocedure
+
+procedure main()
+    int a, b;
+    
+    print("Entre com o a e b: ");
+    read("%d%d", a, b);
+    
+    println("novo a: " + a);
+    println("novo b: " + b);
+    
+    return EXIT_SUCCESS;
+endprocedure

@@ -1,0 +1,33 @@
+/***
+  *
+  *
+  */
+s = "This is a string: /* with a comment */";
+/* asdga
+asf
+*/
+
+/* 
+asdga */
+
+asd /* dfsdf */
+
+/* zdfsd
+sdfs
+*/
+
+asdasd /* Edit the Expression & Text to see matches. Roll over matches or the expression for details. Undo available in the Library, or watch the video Tutorial. */
+
+x = 2
+
+//comment1 /*
+foo();
+//comment2 */
+
+zxc /* zxc		
+* zdfsd
+sdfs
+*
+*/zczxc
+
+if()
