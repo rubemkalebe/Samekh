@@ -1,0 +1,130 @@
+/*
+ * Arquivo para testar o parser. Contem varios tipos de declaracoes validas em Samekh.
+ *
+ */
+
+/* Declaracoes de inteiros */
+
+int a;
+int b;
+const int c = null;
+static int c = nul;
+const static int c;
+static const int c;
+int i, j, k, l, m, n;
+int i = 0, j = 1, l, m = 2;
+int x = foo.x;
+int x = foo.getX();
+int soma = 1 + 2 + 3;
+int op = 1 + 2 * 3 - 1;
+int x = foo.x + 10;
+int x = foo.getX() + 5;
+int x = x + 1;
+int v[5];
+int v[foo.size()];
+
+// Esta causando erro
+// int v[foo.size() + 1];
+
+int v[5] = {};
+int v[5] = {0, 1, 2};
+int v[foo.size()] = {0, 1, 2};
+
+/* Declaracoes de floats e doubles */
+
+float a;
+double b;
+float i, j, k, l, m, n;
+double i, j, k, l, m, n;
+float i = 0, j = 1, l, m = 2;
+double i = 0, j = 1, l, m = 2;
+float x = foo.x;
+float x = foo.getX();
+double x = foo.x;
+double x = foo.getX();
+float soma = 1 + 2 + 3;
+double soma = 1 + 2 + 3;
+float op = 1 + 2 * 3 - 1;
+double op = 1 + 2 * 3 - 1;
+float x = foo.x + 10;
+float x = foo.getX() + 5;
+float x = x + 1;
+double x = foo.x + 10;
+double x = foo.getX() + 5;
+double x = x + 1;
+float v[5];
+double v[5];
+float v[foo.size()];
+double v[foo.size()];
+
+// Esta causando erro
+// float v[foo.size() + 1];
+// double v[foo.size() + 1];
+
+float v[5] = {};
+float v[5] = {0.0, 1.0, 2.1};
+float v[foo.size()] = {0, 1.789, 2};
+double v[5] = {};
+double v[5] = {0.0, 1.555, 2.789456};
+double v[foo.size()] = {0.456, 1, 2};
+
+/* Declaracoes de auto */
+
+auto a;
+auto b;
+auto i, j, k, l, m, n;
+auto i = 0, j = 1, l, m = 2;
+auto x = foo.x;
+auto x = foo.getX();
+auto soma = 1 + 2 + 3;
+auto op = 1 + 2 * 3.0 - 1.55;
+auto x = foo.x + 10;
+auto x = foo.getX() + 5;
+auto x = x + 1;
+auto v[5];
+auto v[foo.size()];
+
+// Esta causando erro
+// auto v[foo.size() + 1];
+
+auto v[5] = {};
+auto v[5] = {0, 1, 2};
+auto v[foo.size()] = {0.45, 1.47851, 2.33};
+
+/* Declaracoes de bool */
+
+bool a;
+bool b = true;
+bool b = false;
+bool i, j, k, l, m, n;
+bool i = 0, j = false, l, m = 2;
+bool x = foo.x;
+bool x = foo.getX();
+bool soma = 1 + 2 + 3;
+bool op = 1 + 2 * 3 - 1;
+bool x = foo.x + 10;
+bool x = foo.getX() + 5;
+bool x = x + 1;
+bool v[5];
+bool v[foo.size()];
+
+// Esta causando erro
+// bool v[foo.size() + 1];
+
+bool v[5] = {};
+bool v[5] = {0, false, true};
+bool v[foo.size()] = {0, 1, 2};
+
+/* Declaracoes de string */
+string s;
+string s = "rubem";
+string s = "rubem" + " kalebe";
+string s = s + " santos";
+string s = foo.str;
+string s = foo.str();
+string v[5];
+string v[5] = {};
+string v[3] = {"rubem", "kalebe", "santos"};
+
+// Esta causando erro
+// string v[foo.size() + 1];

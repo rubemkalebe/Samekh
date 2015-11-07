@@ -26,7 +26,6 @@ void lineComment(); // foi substituida pela regex
 %%
 
 "if"						return IF;
-"elsif"					return ELSIF;
 "else"					return ELSE;
 "while"					return WHILE;
 "for"						return FOR;
@@ -44,7 +43,7 @@ void lineComment(); // foi substituida pela regex
 "endwhile"			return END_WHILE;
 "break"					return BREAK;
 "continue"			return CONTINUE;
-"do"						return DO;
+"then"					return THEN;
 "case"					return CASE;
 "when"					return WHEN;
 "const"					return CONST;

@@ -1,0 +1,20 @@
+union Figure (Shape form)
+  bool filled;
+  Colors color;
+  case form
+    when Circle then
+      float diameter;
+    when Triangle then
+      int ls;
+      int rs;
+      float angle;
+    when Rectangle then
+      int side1;
+      int side2;
+  endcase
+endunion
+
+union Point
+  int x;
+  int y;
+endunion

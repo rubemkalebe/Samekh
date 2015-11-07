@@ -10,8 +10,11 @@ int main(int argc, char *argv[]) {
                 yyin = stdin;
         }
 
-	printf("\t\t******* Samekh Compiler ********\n");
-	yyparse();
-	//printf("o código passou sem erros!!\n");
+	//printf("\t\t******* Samekh Compiler ********\n");
+	if(!yyparse()) {
+  	printf("O codigo passou sem erros!!\n");
+  } else {
+    printf("O codigo NAO passou!!\n");
+  }
   return 0;
 }

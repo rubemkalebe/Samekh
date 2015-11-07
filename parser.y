@@ -45,8 +45,8 @@ extern "C" {
 %token BOOL                 BREAK               BYTE
 %token BITWISE_COMPLEMENT   BITWISE_OR          BITWISE_OR_EXC
 %token CASE                 CHAR                COMMA                   CONTINUE          CONST
-%token DO                   DOT                 DOUBLE
-%token ENUM                 ELSE                ELSIF
+%token DOT                  DOUBLE
+%token ENUM                 ELSE
 %token END_CASE             END_ENUM            END_FOR                 END_FUNCTION      END_IF            END_PROCEDURE
 %token END_STRUCT           END_UNION           END_WHILE
 %token FLOAT                FOR                 FUNCTION
@@ -62,7 +62,7 @@ extern "C" {
 %token R_PAREN              R_SQ_PAREN          R_BRACE                 R_SHIFT
 %token SHORT                STRING              STRUCT                  STATIC            SIZEOF
 %token SEMICOLON
-%token TYPEOF
+%token THEN                 TYPEOF
 %token UNION
 %token WHEN                 WHILE
 
@@ -91,12 +91,76 @@ declaration
   ;
 
 function_declaration
-  : FUNCTION
+  : FUNCTION type_specifier subprogram_declarator subprogram_body END_FUNCTION
   ;
 
 procedure_declaration
-  : PROCEDURE
+  : PROCEDURE subprogram_declarator subprogram_body END_PROCEDURE
   ;
+
+subprogram_declarator
+  : IDENTIFIER L_PAREN parameter_list R_PAREN
+  | IDENTIFIER L_PAREN R_PAREN
+  ;
+
+parameter_list
+  : parameter
+  | parameter_list COMMA parameter
+  ;
+
+parameter
+  : type_specifier declarator_name
+  | CONST type_specifier declarator_name
+  ;
+
+subprogram_body
+  : block
+  | SEMICOLON
+  ;
+
+block
+  : local_variable_declarations_and_statements
+  ;
+
+local_variable_declarations_and_statements
+  : local_variable_declarations_or_statements
+  | local_variable_declarations_and_statements local_variable_declarations_or_statements
+  ;
+
+local_variable_declarations_or_statements
+  : local_variable_declaration_statement
+  | statement
+  ;
+
+local_variable_declaration_statement
+  : type_specifier variable_declarators SEMICOLON
+  | STATIC type_specifier variable_declarators SEMICOLON
+  ;
+
+statement
+  : assignment_expression SEMICOLON
+  | selection_statement
+  | iteration_statement
+	| jump_statement
+  ;
+
+selection_statement
+  : IF //L_PAREN expression R_PAREN statement
+  //| IF L_PAREN expression R_PAREN statement ELSE statement
+  ;
+
+iteration_statement
+  : FOR
+  ;
+
+jump_statement
+	: BREAK    IDENTIFIER  SEMICOLON
+	| BREAK                SEMICOLON
+  | CONTINUE IDENTIFIER  SEMICOLON
+	| CONTINUE             SEMICOLON
+	| RETURN   expression  SEMICOLON
+	| RETURN               SEMICOLON
+	;
 
 type_declaration
   : STRUCT IDENTIFIER variable_declarations END_STRUCT
@@ -146,7 +210,8 @@ primitive_type
   ;
 
 discriminant
-  :
+  : L_PAREN type_specifier declarator_name R_PAREN
+  | /* epsilon */
   ;
 
 enumerator_list
@@ -174,7 +239,21 @@ qualified_name2
   ;*/
 
 union_body
-  :
+  : variable_declarations short_case_statement
+  | variable_declarations
+  ;
+
+short_case_statement
+  : CASE IDENTIFIER choices END_CASE
+  ;
+
+choices
+  : choice
+  | choices choice
+  ;
+
+choice
+  : WHEN IDENTIFIER THEN variable_declarations
   ;
 
 variable_declarators
@@ -348,6 +427,7 @@ complex_primary_no_parenthesis
   | DECIMAL
   | HEX
   | FLOATING_POINT
+  | NNULL
   | STRING_LITERAL
   | array_access
   | field_access

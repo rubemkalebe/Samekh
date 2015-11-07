@@ -1,0 +1,10 @@
+struct Vertex
+  int id;
+endstruct
+
+struct Edge
+  Vertex initial;
+  Vertex final;
+  int id;
+  int cost;
+endstruct
