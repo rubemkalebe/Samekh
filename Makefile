@@ -1,6 +1,6 @@
 # DEFINIÇÃO DAS VARIÁVEIS ( OPCIONAL )
 LEX=flex
-YACC=yacc
+YACC=bison
 CC=gcc
 CP=g++
 LEXFILE=lexer.l

@@ -65,18 +65,12 @@ translation_unit
   ;
 
 program_file
-  : declarations
+  : type_declarations subprogram_declarations
   ;
 
-declarations
-  : declaration
-  | declarations declaration
-  ;
-
-declaration
-  : function_declaration
-  | procedure_declaration
-  | field_declaration
+type_declarations
+  : type_declaration
+  | type_declarations type_declaration
   ;
 
 type_declaration
@@ -112,6 +106,7 @@ modifier
 
 type_specifier
   : type_name
+  | type_name dims
   ;
 
 type_name
@@ -198,6 +193,13 @@ enumerator_list
 enumerator
   : IDENTIFIER ASSIGN expression
   | IDENTIFIER
+  ;
+
+subprogram_declarations
+  : function_declaration
+  | procedure_declaration
+  | subprogram_declarations function_declaration
+  | subprogram_declarations procedure_declaration
   ;
 
 function_declaration

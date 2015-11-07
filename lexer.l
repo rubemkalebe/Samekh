@@ -54,9 +54,6 @@ void lineComment(); // foi substituida pela regex
 "read"					return READ;
 "null"					return NNULL;
 
-"true"					return TRUE;
-"false"					return FALSE;
-
 "auto"					return AUTO;
 "bool"					return BOOL;
 "byte"					return BYTE;
@@ -116,6 +113,8 @@ void lineComment(); // foi substituida pela regex
 ">>"						return R_SHIFT;
 ">>="						return ASSIGN_R_SHIFT;
 "->"						return OP_PTR;
+
+"true" | "false" return BOOL_LITERAL;
 
 [_a-zA-Z][_a-zA-Z0-9]* {
 	return checkType();
