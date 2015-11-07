@@ -106,32 +106,136 @@ type_declaration
 
 variable_declarations
   : variable_declaration
-  | variable_declarations variable_declaration
+  | variable_declarations variable_declaration {std::cout << "teste2\n";}
   ;
 
 variable_declaration
-  : modifiers type_specifier variable_declarators SEMICOLON
-  |           type_specifier variable_declarators SEMICOLON
+  : declaration_specifiers {std::cout << "teste1\n";}  SEMICOLON
+  | declaration_specifiers init_declarator_list SEMICOLON
   ;
 
-modifiers
-  : modifier
-  | modifiers modifier
+declaration_specifiers: storage_specifier
+	| storage_specifier declaration_specifiers
+	| type_specifier {std::cout << "type\n";}
+	| type_specifier {std::cout << "type\n";} declaration_specifiers
+	| type_qualifier
+	| type_qualifier declaration_specifiers
+	;
+
+storage_specifier: STATIC
+
+type_specifier: CHAR
+	| SHORT
+	| INT
+	| LONG
+	| FLOAT
+	| DOUBLE
+	| STRING
+	| BOOL
+	| AUTO
+	;
+
+type_qualifier: CONST
+	;
+
+init_declarator_list: init_declarator
+	| init_declarator_list COMMA init_declarator
+	;
+
+init_declarator: declarator ASSIGN initializer
+	| declarator
+	;
+
+initializer: L_BRACE initializer_list R_BRACE
+	| L_BRACE initializer_list COMMA R_BRACE
+	| assignment_expression
+	;
+
+initializer_list: designation initializer
+	| initializer
+	| initializer_list COMMA designation initializer
+	| initializer_list COMMA initializer
+	;
+
+designation: designator_list ASSIGN
+	;
+
+designator_list: designator
+	| designator_list designator
+	;
+
+designator: L_SQ_PAREN constant_expression R_SQ_PAREN
+	| DOT IDENTIFIER
+	;
+
+declarator: pointer direct_declarator
+	| reference direct_declarator
+	| direct_declarator
+	;
+
+pointer: OP_ASTERISK type_qualifier_list pointer
+	| OP_ASTERISK type_qualifier_list
+	| OP_ASTERISK pointer
+	| OP_ASTERISK
+	;
+
+reference: AMPERSAND type_qualifier_list reference
+	| AMPERSAND type_qualifier_list
+	| OP_ASTERISK reference
+	| AMPERSAND
+	;
+
+type_qualifier_list: type_qualifier
+	| type_qualifier_list type_qualifier
+	;
+
+direct_declarator: IDENTIFIER
+	| L_PAREN declarator R_PAREN
+	| direct_declarator L_SQ_PAREN constant_expression R_SQ_PAREN
+	| direct_declarator L_SQ_PAREN R_SQ_PAREN
+	| direct_declarator L_SQ_PAREN assignment_expression R_SQ_PAREN
+	| direct_declarator L_PAREN parameter_type_list R_PAREN
+	| direct_declarator L_PAREN identifier_list R_PAREN
+	| direct_declarator L_PAREN R_PAREN
+	;
+
+constant_expression
+: BREAK
+;
+
+identifier_list: IDENTIFIER
+  | identifier_list COMMA IDENTIFIER
   ;
 
-modifier
-  : CONST
-  | STATIC
-  ;
+  abstract_declarator: pointer
+  	| reference
+  	| direct_abstract_declarator
+  	| pointer direct_abstract_declarator
+  	| reference direct_abstract_declarator
+  	;
 
-type_specifier
-  : type_name
-  ;
+  direct_abstract_declarator: L_PAREN abstract_declarator R_PAREN
+  	| L_SQ_PAREN R_SQ_PAREN
+  	| L_SQ_PAREN constant_expression R_SQ_PAREN
+  	| direct_abstract_declarator L_SQ_PAREN R_SQ_PAREN
+  	| direct_abstract_declarator L_SQ_PAREN constant_expression R_SQ_PAREN
+  	| L_PAREN R_PAREN
+  	| L_PAREN parameter_type_list R_PAREN
+  	| direct_abstract_declarator L_PAREN R_PAREN
+  	| direct_abstract_declarator L_PAREN parameter_type_list R_PAREN
+  	;
 
-type_name
-  : primitive_type
-  | qualified_name
-  ;
+  parameter_type_list: parameter_list
+  	;
+
+  parameter_list: parameter_declaration
+  	| parameter_list COMMA parameter_declaration
+  	;
+
+  parameter_declaration: declaration_specifiers declarator
+  	| declaration_specifiers abstract_declarator
+  	| declaration_specifiers
+  	;
 
 primitive_type
   : AUTO
@@ -143,6 +247,10 @@ primitive_type
   | LONG
   | SHORT
   | STRING
+  ;
+
+qualified_name
+  : CONTINUE
   ;
 
 discriminant
@@ -159,49 +267,8 @@ enumerator
   | IDENTIFIER
   ;
 
-qualified_name
-  : IDENTIFIER
-  //| qualified_name DOT IDENTIFIER // causando s/r
-  ;
-
-/*qualified_name
-  : IDENTIFIER qualified_name2
-  ;
-
-qualified_name2
-  :
-  | DOT IDENTIFIER qualified_name2
-  ;*/
-
 union_body
   :
-  ;
-
-variable_declarators
-  : variable_declarator
-  | variable_declarators COMMA variable_declarator
-  ;
-
-variable_declarator
-  : declarator_name
-  | declarator_name ASSIGN variable_initializer
-  ;
-
-declarator_name
-  : IDENTIFIER
-  | declarator_name L_SQ_PAREN expression R_SQ_PAREN
-  ;
-
-variable_initializer
-  : expression
-  | L_BRACE R_BRACE
-  | L_BRACE array_initializers R_BRACE
-  ;
-
-array_initializers
-  : variable_initializer
-  | array_initializers COMMA variable_initializer
-  | array_initializers COMMA
   ;
 
 expression
@@ -344,6 +411,7 @@ complex_primary
 
 complex_primary_no_parenthesis
   : BOOL_LITERAL
+  | CHAR_LITERAL
   | OCTAL
   | DECIMAL
   | HEX

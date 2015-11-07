@@ -14,6 +14,8 @@ int	octal(char *str);
 
 int	hex(char *str);
 
+char getChar(char *str);
+
 void multLineComment(); // foi substituida pela regex
 
 void lineComment(); // foi substituida pela regex
@@ -114,7 +116,15 @@ void lineComment(); // foi substituida pela regex
 ">>="						return ASSIGN_R_SHIFT;
 "->"						return OP_PTR;
 
-"true" | "false" return BOOL_LITERAL;
+"true" {
+  yylval.bValue = 1;
+  return BOOL_LITERAL;
+ }
+
+"false" {
+  yylval.bValue = 0;
+  return BOOL_LITERAL;
+}
 
 [_a-zA-Z][_a-zA-Z0-9]* {
 	return checkType();
@@ -136,8 +146,13 @@ void lineComment(); // foi substituida pela regex
 }
 
 [+-]?[0-9]+([.][0-9]+)?([eE][+-]?[0-9]+)? {
-	yylval.iValue = atof(yytext);
+	yylval.fValue = atof(yytext);
 	return FLOATING_POINT;
+}
+
+\'(\\.|[^'])\' {
+  yylval.cValue = getChar(yytext);
+  return CHAR_LITERAL;
 }
 
 \"(\\.|[^"])*\" {
@@ -183,9 +198,32 @@ int hex(char *str) {
 	return num;
 }
 
+/* Rotina para conversao de string->char */
+char getChar(char *str) {
+	char c = 0;
+  if((char) str[1] == 0x5C && (char) str[2] == 0x61) {
+    c = (char) 0x07;
+  } else if((char) str[1] == 0x5C && (char) str[2] == 0x62) {
+    c = (char) 0x08;
+  } else if((char) str[1] == 0x5C && (char) str[2] == 0x6E) {
+    c = (char) 0x0A;
+  } else if((char) str[1] == 0x5C && (char) str[2] == 0x76) {
+    c = (char) 0x0B;
+  } else if((char) str[1] == 0x5C && (char) str[2] == 0x66) {
+    c = (char) 0x0C;
+  } else if((char) str[1] == 0x5C && (char) str[2] == 0x72) {
+    c = (char) 0x0D;
+  } else if((char) str[1] == 0x5C) {
+    fprintf(stderr, "Bad input '%s' at line %d.\n", yytext, yylineno);
+  } else if((char) str[1] >= 0x20 && (char) str[1] < 0x7F) {
+    c = (char) str[1];
+  }
+	return c;
+}
+
 int checkType() {
 	// ajeitar
-	return 400;
+	return IDENTIFIER;
 }
 
 

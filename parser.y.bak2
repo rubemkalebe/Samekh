@@ -10,8 +10,6 @@
 #include <cstdlib>
 #include <cstring>
 
-using namespace std;
-
 extern char *yytext;
 extern int yylineno;
 
@@ -25,42 +23,36 @@ extern "C" {
 %}
 
 %union{
-	int iValue; 	  /* integer value */
-	char cValue;	  /* char value */
-  char bValue;    /* bool value */
-	char *sValue;	  /* string value */
-  double fValue;  /* floating point value */
+	int iValue; 	/* integer value */
+	char cValue;	/* char value */
+  char bValue;  /* bool value */
+	char *sValue;	/* string value */
 };
-
-
-%token <sValue> IDENTIFIER  STRING_LITERAL
-%token <iValue> DECIMAL     HEX             OCTAL
-%token <fValue> FLOATING_POINT
-%token <bValue> BOOL_LITERAL
-%token <cValue> CHAR_LITERAL
 
 %token ASSIGN               ASSIGN_PLUS         ASSIGN_MINUS            ASSIGN_PRODUCT    ASSIGN_DIV        ASSIGN_MOD
 %token ASSIGN_BITWISE_AND   ASSIGN_BITWISE_OR   ASSIGN_BITWISE_OR_EXC   ASSIGN_L_SHIFT    ASSIGN_R_SHIFT
 %token AMPERSAND            AUTO
-%token BOOL                 BREAK               BYTE
+%token BOOL                 BOOL_LITERAL        BREAK               BYTE
 %token BITWISE_COMPLEMENT   BITWISE_OR          BITWISE_OR_EXC
 %token CASE                 CHAR                COMMA                   CONTINUE          CONST
-%token DO                   DOT                 DOUBLE
+%token DECIMAL              DO                  DOT                     DOUBLE
 %token ENUM                 ELSE                ELSIF
 %token END_CASE             END_ENUM            END_FOR                 END_FUNCTION      END_IF            END_PROCEDURE
 %token END_STRUCT           END_UNION           END_WHILE
-%token FLOAT                FOR                 FUNCTION
-%token IF                   INT
+%token FLOAT                FOR                 FUNCTION                FLOATING_POINT
+%token HEX
+%token IDENTIFIER           IF                   INT
 %token L_PAREN              L_SQ_PAREN          L_BRACE                 L_SHIFT
 %token LOG_NOT              LOG_AND             LOG_OR                  LOG_SC_AND        LOG_SC_OR
 %token LONG
 %token NNULL
 %token OP_EQ                OP_NE               OP_PTR                  OP_PLUS           OP_MINUS          OP_ASTERISK
 %token OP_DIV               OP_MOD              OP_LET                  OP_LT             OP_GET            OP_GT
+%token OCTAL
 %token PRINT                PRINTLN             PROCEDURE
 %token READ                 RETURN
 %token R_PAREN              R_SQ_PAREN          R_BRACE                 R_SHIFT
-%token SHORT                STRING              STRUCT                  STATIC            SIZEOF
+%token SHORT                STRING              STRING_LITERAL          STRUCT            STATIC            SIZEOF
 %token SEMICOLON
 %token TYPEOF
 %token UNION
@@ -90,28 +82,25 @@ declaration
   | variable_declaration
   ;
 
-function_declaration
-  : FUNCTION
-  ;
-
-procedure_declaration
-  : PROCEDURE
-  ;
-
 type_declaration
-  : STRUCT IDENTIFIER variable_declarations END_STRUCT
+  : STRUCT IDENTIFIER field_declarations END_STRUCT
   | UNION IDENTIFIER discriminant union_body END_UNION
   | ENUM IDENTIFIER enumerator_list END_ENUM
   ;
 
-variable_declarations
-  : variable_declaration
-  | variable_declarations variable_declaration
+field_declarations
+  : field_declaration
+  | field_declarations field_declaration
   ;
 
-variable_declaration
-  : modifiers type_specifier variable_declarators SEMICOLON
-  |           type_specifier variable_declarators SEMICOLON
+field_declaration
+  : field_ SEMICOLON
+  |
+  ;
+
+field_variable_declaration
+  : modifiers type_specifier variable_declarators
+  |           type_specifier variable_declarators
   ;
 
 modifiers
@@ -133,6 +122,16 @@ type_name
   | qualified_name
   ;
 
+dims
+  : L_SQ_PAREN expression_or_empty R_SQ_PAREN
+  | dims L_SQ_PAREN expression_or_empty R_SQ_PAREN
+  ;
+
+expression_or_empty
+  : expression
+  |
+  ;
+
 primitive_type
   : AUTO
   | BOOL
@@ -145,36 +144,18 @@ primitive_type
   | STRING
   ;
 
-discriminant
-  :
-  ;
-
-enumerator_list
-  : enumerator
-  | enumerator_list COMMA enumerator
-  ;
-
-enumerator
-  : IDENTIFIER ASSIGN expression
-  | IDENTIFIER
-  ;
+/*qualified_name
+  : IDENTIFIER
+  | qualified_name DOT IDENTIFIER
+  ;*/
 
 qualified_name
-  : IDENTIFIER
-  //| qualified_name DOT IDENTIFIER // causando s/r
-  ;
-
-/*qualified_name
   : IDENTIFIER qualified_name2
   ;
 
 qualified_name2
   :
   | DOT IDENTIFIER qualified_name2
-  ;*/
-
-union_body
-  :
   ;
 
 variable_declarators
@@ -189,7 +170,7 @@ variable_declarator
 
 declarator_name
   : IDENTIFIER
-  | declarator_name L_SQ_PAREN expression R_SQ_PAREN
+  | declarator_name L_SQ_PAREN R_SQ_PAREN
   ;
 
 variable_initializer
@@ -202,6 +183,32 @@ array_initializers
   : variable_initializer
   | array_initializers COMMA variable_initializer
   | array_initializers COMMA
+  ;
+
+discriminant
+  :
+  ;
+
+union_body
+  :
+  ;
+
+enumerator_list
+  : enumerator
+  | enumerator_list COMMA enumerator
+  ;
+
+enumerator
+  : IDENTIFIER ASSIGN expression
+  | IDENTIFIER
+  ;
+
+function_declaration
+  : ASSIGN
+  ;
+
+procedure_declaration
+  : COMMA
   ;
 
 expression
@@ -378,12 +385,6 @@ argument_list
   : expression
   | argument_list COMMA expression
   ;
-
-dims
-  : L_SQ_PAREN R_SQ_PAREN
-  | dims L_SQ_PAREN R_SQ_PAREN
-  ;
-
 
 %%
 
