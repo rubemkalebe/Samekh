@@ -1,0 +1,26 @@
+function int fatIterativo(int n)
+    while(i <= n)
+        fat *= i;
+        i += 1;
+    endwhile
+    return fat;
+endfunction
+
+function int fatRecursivo(int n)
+    if(n != 1)
+        return n * fatRecursivo(n-1);
+    else
+        return n;
+    endif
+endfunction
+
+procedure main()
+    int i = 1, input;
+
+    print("Entre com o n: ");
+    read ("%d", input);
+
+    println("O fatorial de " + input + " eh " + fatIterativo(input));
+    println("O fatorial de " + input + " eh " + fatRecursivo(input));
+    
+endprocedure

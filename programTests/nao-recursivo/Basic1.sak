@@ -1,0 +1,27 @@
+procedure main()
+
+  int i;
+  float f;
+  double d;
+  char c;
+  string s;
+  auto a;
+
+  // Leitura
+
+
+  // Avaliacao de expressoes
+
+
+  // Atribuicoes
+
+
+  // Escrita na tela
+  println("int i: " + i);
+  println("float f: " + i);
+  println("double d: " + i);
+  println("char c: " + i);
+  println("string s: " + i);
+  println("auto a: " + i);
+
+endprocedure

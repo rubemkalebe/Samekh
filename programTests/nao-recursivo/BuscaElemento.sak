@@ -1,0 +1,37 @@
+function int search_and_return_position(int array[], int n, int k)
+  for(int i = 0; i < n; i++)
+    if(array[i] == k)
+      return i;
+    endif
+  endfor
+  return -1;
+endfunction
+
+function bool search_and_return_result(int array[], int n, int k)
+  for(int i = 0; i < n; i++)
+    if(array[i] == k)
+      return true;
+    endif
+  endfor
+  return false
+endfunction
+
+procedure main()
+  int array1[5] = {0, 1, 5, 10, 15};
+  int array2[3];
+
+  // Ler array2
+
+
+  // Busca elementos em arrays
+  int ri = search_and_return_position(array1, 5, 10);
+  bool rb = search_and_return_result(array2, 5, 1);
+  println("Busca por " + 10 + " no array1: " + ri);
+  println("Busca por " + 1 + " no array1: " + rb);
+
+  ri = search_and_return_position(array2, 3, ??);
+  rb = search_and_return_result(array2, 3, ??);
+  println("Busca por " + ?? + " no array2: " + ri);
+  println("Busca por " + ?? + " no array2: " + rb);
+
+endprocedure
