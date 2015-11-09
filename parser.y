@@ -33,8 +33,8 @@ extern "C" {
 };
 
 
-%token <sValue> IDENTIFIER  STRING_LITERAL
-%token <iValue> DECIMAL     HEX             OCTAL
+%token <sValue> IDENTIFIER    STRING_LITERAL
+%token <iValue> DECIMAL       HEX               OCTAL
 %token <fValue> FLOATING_POINT
 %token <bValue> BOOL_LITERAL
 %token <cValue> CHAR_LITERAL
@@ -46,7 +46,7 @@ extern "C" {
 %token BITWISE_COMPLEMENT   BITWISE_OR          BITWISE_OR_EXC
 %token CASE                 CHAR                COMMA                   CONTINUE          CONST
 %token DOT                  DOUBLE
-%token ENUM                 ELSE
+%token ENUM                 ELSE                ELSIF
 %token END_CASE             END_ENUM            END_FOR                 END_FUNCTION      END_IF            END_PROCEDURE
 %token END_STRUCT           END_UNION           END_WHILE
 %token FLOAT                FOR                 FUNCTION
@@ -145,12 +145,49 @@ statement
   ;
 
 selection_statement
-  : IF //L_PAREN expression R_PAREN statement
-  //| IF L_PAREN expression R_PAREN statement ELSE statement
+  : IF L_PAREN expression R_PAREN block ELSIF elsif_staments END_IF
+  | IF L_PAREN expression R_PAREN block ELSE block END_IF
+  | IF L_PAREN expression R_PAREN block END_IF
+  ;
+
+elsif_staments
+  : elsif_stament
+  | elsif_staments ELSIF elsif_stament
+  | ELSE block
+  ;
+
+elsif_stament
+  : L_PAREN expression R_PAREN block
   ;
 
 iteration_statement
-  : FOR
+  : WHILE L_PAREN expression R_PAREN block END_WHILE
+  | FOR L_PAREN for_init for_expr for_incr R_PAREN block END_FOR
+  | FOR L_PAREN for_init for_expr R_PAREN block END_FOR
+  ;
+
+for_init
+  : expression_statements SEMICOLON
+  | local_variable_declaration_statement
+  | SEMICOLON
+  ;
+
+for_expr
+  : expression SEMICOLON
+  | SEMICOLON
+  ;
+
+for_incr
+  : expression_statements
+  ;
+
+expression_statements
+  : expression_statement
+  | expression_statements COMMA expression_statement
+  ;
+
+expression_statement
+  : expression
   ;
 
 jump_statement
@@ -463,7 +500,6 @@ dims
   : L_SQ_PAREN R_SQ_PAREN
   | dims L_SQ_PAREN R_SQ_PAREN
   ;
-
 
 %%
 

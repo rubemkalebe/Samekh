@@ -26,6 +26,7 @@ void lineComment(); // foi substituida pela regex
 %%
 
 "if"						return IF;
+"elsif"         return ELSIF;
 "else"					return ELSE;
 "while"					return WHILE;
 "for"						return FOR;
