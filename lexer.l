@@ -130,22 +130,22 @@ void lineComment(); // foi substituida pela regex
 	return checkType();
 }
 
-[+-]?0[0-7]+ {
+0[0-7]+ {
 	yylval.iValue = octal(yytext);
 	return OCTAL;
 }
 
-[+-]?[0-9]+	{
+[0-9]+	{
 	yylval.iValue = atoi(yytext);
 	return DECIMAL;
 }
 
-[+-]?0[xX][0-9a-fA-F]+ {
+0[xX][0-9a-fA-F]+ {
 	yylval.iValue = hex(yytext);
 	return HEX;
 }
 
-[+-]?[0-9]+([.][0-9]+)?([eE][+-]?[0-9]+)? {
+[0-9]+([.][0-9]+)?([eE][+-]?[0-9]+)? {
 	yylval.fValue = atof(yytext);
 	return FLOATING_POINT;
 }

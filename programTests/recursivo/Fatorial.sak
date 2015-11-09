@@ -22,5 +22,5 @@ procedure main()
 
     println("O fatorial de " + input + " eh " + fatIterativo(input));
     println("O fatorial de " + input + " eh " + fatRecursivo(input));
-    
+
 endprocedure
