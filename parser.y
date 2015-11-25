@@ -9,6 +9,8 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+//#include "SymbolTable.hpp"
+//#include "PrimitiveTypeEntry.hpp"
 
 using namespace std;
 
@@ -22,6 +24,8 @@ extern "C" {
 
   void yyerror(const char *s);
 }
+
+//SymbolTable *env = new SymbolTable(NULL);
 %}
 
 %union{
@@ -42,7 +46,7 @@ extern "C" {
 %token ASSIGN               ASSIGN_PLUS         ASSIGN_MINUS            ASSIGN_PRODUCT    ASSIGN_DIV        ASSIGN_MOD
 %token ASSIGN_BITWISE_AND   ASSIGN_BITWISE_OR   ASSIGN_BITWISE_OR_EXC   ASSIGN_L_SHIFT    ASSIGN_R_SHIFT
 %token AMPERSAND            AUTO
-%token BOOL                 BREAK               BYTE
+%token BOOL                 BREAK
 %token BITWISE_COMPLEMENT   BITWISE_OR          BITWISE_OR_EXC
 %token CASE                 CHAR                COMMA                   CONTINUE          CONST
 %token DOT                  DOUBLE
@@ -142,6 +146,9 @@ statement
   | selection_statement
   | iteration_statement
 	| jump_statement
+  | read_statement
+  | print_statement
+  | println_statement
   ;
 
 selection_statement
@@ -199,6 +206,19 @@ jump_statement
 	| RETURN               SEMICOLON
 	;
 
+read_statement
+  : READ L_PAREN STRING_LITERAL COMMA argument_list R_PAREN SEMICOLON
+  | READ L_PAREN STRING_LITERAL R_PAREN SEMICOLON
+  ;
+
+print_statement
+  : PRINT L_PAREN expression R_PAREN SEMICOLON
+  ;
+
+println_statement
+  : PRINTLN L_PAREN expression R_PAREN SEMICOLON
+  ;
+
 type_declaration
   : STRUCT IDENTIFIER variable_declarations END_STRUCT
   | UNION IDENTIFIER discriminant union_body END_UNION
@@ -230,7 +250,7 @@ type_specifier
   ;
 
 type_name
-  : primitive_type
+  : primitive_type //{PrimitiveTypeEntry pt(INT); env->put("a", pt); cout << env->get("a") << "\n"; cout << env->get("b") << "\n";}
   | qualified_name
   ;
 
@@ -263,17 +283,7 @@ enumerator
 
 qualified_name
   : IDENTIFIER
-  //| qualified_name DOT IDENTIFIER // causando s/r
   ;
-
-/*qualified_name
-  : IDENTIFIER qualified_name2
-  ;
-
-qualified_name2
-  :
-  | DOT IDENTIFIER qualified_name2
-  ;*/
 
 union_body
   : variable_declarations short_case_statement
@@ -466,6 +476,7 @@ complex_primary_no_parenthesis
   | FLOATING_POINT
   | NNULL
   | STRING_LITERAL
+  | CHAR_LITERAL
   | array_access
   | field_access
   | subprogram_call
@@ -477,8 +488,7 @@ array_access
   ;
 
 field_access
-  : not_just_name DOT IDENTIFIER
-  | postfix_expression DOT IDENTIFIER
+  : postfix_expression DOT IDENTIFIER
   ;
 
 subprogram_call

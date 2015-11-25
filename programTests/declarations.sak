@@ -114,3 +114,17 @@ string v[5];
 string v[5] = {};
 string v[3] = {"rubem", "kalebe", "santos"};
 string v[foo.size() + 1];
+
+/* Declaracoes de char */
+char c;
+char c = 'a';
+char c = '\n';
+char c = '\t';
+char c = ' ';
+char c = 'A' + 3;
+char c = foo.ch;
+char c = foo.ch();
+char c[5];
+char c[5] = {};
+char c[3] = {'a', 'b', 'c'};
+char c[foo.size() + 1];

@@ -5,6 +5,8 @@
  * Especificacoes lex da linguagem Samekh.
  */
 
+ES  (\\(['"\?\\abfnrtv]|[0-7]{1,3}|x[a-fA-F0-9]+))
+
 %{
 #include <stdio.h>
 #include <stdlib.h>
@@ -58,7 +60,6 @@ void lineComment(); // foi substituida pela regex
 
 "auto"					return AUTO;
 "bool"					return BOOL;
-"byte"					return BYTE;
 "char"					return CHAR;
 "double"				return DOUBLE;
 "enum"					return ENUM;
@@ -150,7 +151,7 @@ void lineComment(); // foi substituida pela regex
 	return FLOATING_POINT;
 }
 
-\'(\\.|[^'])\' {
+"'"([^'\\\n]|{ES})+"'" {
   yylval.cValue = getChar(yytext);
   return CHAR_LITERAL;
 }
@@ -207,6 +208,8 @@ char getChar(char *str) {
     c = (char) 0x08;
   } else if((char) str[1] == 0x5C && (char) str[2] == 0x6E) {
     c = (char) 0x0A;
+  } else if((char) str[1] == 0x5C && (char) str[2] == 0x74) {
+    c = (char) 0x09;
   } else if((char) str[1] == 0x5C && (char) str[2] == 0x76) {
     c = (char) 0x0B;
   } else if((char) str[1] == 0x5C && (char) str[2] == 0x66) {
