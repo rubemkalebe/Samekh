@@ -9,14 +9,20 @@ YACCPARAM=-d
 YACCFILE=parser.y
 EXECUTABLE=parserTest
 
-main: lex.yy.o Environment.o
-	$(CP) lex.yy.o Environment.o parserTest.cpp -o $(EXECUTABLE)
+main: lex.yy.o SymbolTable.o Entry.o
+	$(CP) lex.yy.o SymbolTable.o Entry.o PrimitiveTypeEntry.o parserTest.cpp -o $(EXECUTABLE)
 
 lex.yy.o: parser
 	$(CC) -c lex.yy.c -o lex.yy.o
 
-Environment.o:
-	$(CP) -c Environment.cpp -o Environment.o
+SymbolTable.o: PrimitiveTypeEntry.o
+	$(CP) -c SymbolTable.cpp -o SymbolTable.o
+
+PrimitiveTypeEntry.o: Entry.o
+	$(CP) -c PrimitiveTypeEntry.cpp -o PrimitiveTypeEntry.o
+
+Entry.o:
+	$(CP) -c Entry.cpp -o Entry.o
 
 parser: parser.y lexer
 	$(YACC) $(YACCPARAM) $(YACCFILE) -o parser.cpp

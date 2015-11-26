@@ -7,9 +7,7 @@ class PrimitiveTypeEntry : public Entry {
 
 public:
 
-  PrimitiveTypeEntry(int type) : Entry(type) {
-    
-  }
+  PrimitiveTypeEntry(int type);
 
 };
 

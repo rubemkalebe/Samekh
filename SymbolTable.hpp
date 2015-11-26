@@ -10,11 +10,11 @@ class SymbolTable {
 private:
 
   std::map<std::string, Entry> table;
-  Environment *prev;
+  SymbolTable *prev;
 
 public:
 
-  Environment(Environment *p);
+  SymbolTable(SymbolTable *p);
 
   void put(std::string lexeme, Entry entry);
 

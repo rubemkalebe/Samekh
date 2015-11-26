@@ -9,8 +9,8 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
-//#include "SymbolTable.hpp"
-//#include "PrimitiveTypeEntry.hpp"
+#include "SymbolTable.hpp"
+#include "PrimitiveTypeEntry.hpp"
 
 using namespace std;
 
@@ -25,7 +25,7 @@ extern "C" {
   void yyerror(const char *s);
 }
 
-//SymbolTable *env = new SymbolTable(NULL);
+SymbolTable *env = new SymbolTable(NULL);
 %}
 
 %union{
@@ -70,6 +70,8 @@ extern "C" {
 %token UNION
 %token WHEN                 WHILE
 
+%type <sValue> primitive_type
+
 %start translation_unit
 
 %%
@@ -83,8 +85,8 @@ program_file
   ;
 
 declarations
-  : declaration
-  | declarations declaration
+  : declaration {cout << "declaration done!\n";}
+  | declarations declaration {cout << "declarations done!\n";}
   ;
 
 declaration
@@ -250,20 +252,20 @@ type_specifier
   ;
 
 type_name
-  : primitive_type //{PrimitiveTypeEntry pt(INT); env->put("a", pt); cout << env->get("a") << "\n"; cout << env->get("b") << "\n";}
+  : primitive_type {cout << $1 << endl;}//{PrimitiveTypeEntry pt(INT); env->put("a", pt); cout << env->get("a") << "\n"; cout << env->get("b") << "\n";}
   | qualified_name
   ;
 
 primitive_type
-  : AUTO
-  | BOOL
-  | CHAR
-  | DOUBLE
-  | FLOAT
-  | INT
-  | LONG
-  | SHORT
-  | STRING
+  : AUTO { $$ = (char *) "auto";}
+  | BOOL { $$ = (char *) "bool";}
+  | CHAR { $$ = (char *) "char";}
+  | DOUBLE { $$ = (char *) "double";}
+  | FLOAT { $$ = (char *) "float";}
+  | INT { $$ = (char *) "int";}
+  | LONG { $$ = (char *) "long";}
+  | SHORT { $$ = (char *) "short";}
+  | STRING { $$ = (char *) "string";}
   ;
 
 discriminant

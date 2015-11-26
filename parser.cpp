@@ -68,8 +68,8 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
-//#include "SymbolTable.hpp"
-//#include "PrimitiveTypeEntry.hpp"
+#include "SymbolTable.hpp"
+#include "PrimitiveTypeEntry.hpp"
 
 using namespace std;
 
@@ -84,7 +84,7 @@ extern "C" {
   void yyerror(const char *s);
 }
 
-//SymbolTable *env = new SymbolTable(NULL);
+SymbolTable *env = new SymbolTable(NULL);
 
 #line 90 "parser.cpp" /* yacc.c:339  */
 
@@ -552,26 +552,26 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,    78,    78,    82,    86,    87,    91,    92,    93,    94,
-      98,   102,   106,   107,   111,   112,   116,   117,   121,   122,
-     126,   130,   131,   135,   136,   140,   141,   145,   146,   147,
-     148,   149,   150,   151,   155,   156,   157,   161,   162,   163,
-     167,   171,   172,   173,   177,   178,   179,   183,   184,   188,
-     192,   193,   197,   201,   202,   203,   204,   205,   206,   210,
-     211,   215,   219,   223,   224,   225,   229,   230,   234,   235,
-     239,   240,   244,   245,   249,   253,   254,   258,   259,   260,
-     261,   262,   263,   264,   265,   266,   270,   271,   275,   276,
-     280,   281,   285,   289,   290,   294,   298,   299,   303,   307,
-     308,   312,   313,   317,   318,   322,   323,   324,   328,   329,
-     330,   334,   338,   339,   343,   344,   348,   349,   353,   357,
-     358,   362,   363,   367,   368,   372,   373,   374,   378,   379,
-     380,   384,   385,   389,   390,   394,   395,   399,   400,   401,
-     405,   406,   407,   408,   409,   410,   414,   415,   416,   420,
-     421,   422,   426,   427,   428,   429,   433,   434,   435,   436,
-     440,   441,   445,   449,   450,   451,   452,   453,   454,   455,
-     456,   457,   458,   459,   463,   467,   468,   472,   473,   474,
-     475,   476,   477,   478,   479,   480,   481,   482,   486,   487,
-     491,   495,   496,   500,   501,   505,   506,   510,   511
+       0,    80,    80,    84,    88,    89,    93,    94,    95,    96,
+     100,   104,   108,   109,   113,   114,   118,   119,   123,   124,
+     128,   132,   133,   137,   138,   142,   143,   147,   148,   149,
+     150,   151,   152,   153,   157,   158,   159,   163,   164,   165,
+     169,   173,   174,   175,   179,   180,   181,   185,   186,   190,
+     194,   195,   199,   203,   204,   205,   206,   207,   208,   212,
+     213,   217,   221,   225,   226,   227,   231,   232,   236,   237,
+     241,   242,   246,   247,   251,   255,   256,   260,   261,   262,
+     263,   264,   265,   266,   267,   268,   272,   273,   277,   278,
+     282,   283,   287,   291,   292,   296,   300,   301,   305,   309,
+     310,   314,   315,   319,   320,   324,   325,   326,   330,   331,
+     332,   336,   340,   341,   345,   346,   350,   351,   355,   359,
+     360,   364,   365,   369,   370,   374,   375,   376,   380,   381,
+     382,   386,   387,   391,   392,   396,   397,   401,   402,   403,
+     407,   408,   409,   410,   411,   412,   416,   417,   418,   422,
+     423,   424,   428,   429,   430,   431,   435,   436,   437,   438,
+     442,   443,   447,   451,   452,   453,   454,   455,   456,   457,
+     458,   459,   460,   461,   465,   469,   470,   474,   475,   476,
+     477,   478,   479,   480,   481,   482,   483,   484,   488,   489,
+     493,   497,   498,   502,   503,   507,   508,   512,   513
 };
 #endif
 
@@ -1741,8 +1741,80 @@ yyreduce:
   YY_REDUCE_PRINT (yyn);
   switch (yyn)
     {
-      
-#line 1746 "parser.cpp" /* yacc.c:1646  */
+        case 4:
+#line 88 "parser.y" /* yacc.c:1646  */
+    {cout << "declaration done!\n";}
+#line 1748 "parser.cpp" /* yacc.c:1646  */
+    break;
+
+  case 5:
+#line 89 "parser.y" /* yacc.c:1646  */
+    {cout << "declarations done!\n";}
+#line 1754 "parser.cpp" /* yacc.c:1646  */
+    break;
+
+  case 75:
+#line 255 "parser.y" /* yacc.c:1646  */
+    {cout << (yyvsp[0].sValue) << endl;}
+#line 1760 "parser.cpp" /* yacc.c:1646  */
+    break;
+
+  case 77:
+#line 260 "parser.y" /* yacc.c:1646  */
+    { (yyval.sValue) = (char *) "auto";}
+#line 1766 "parser.cpp" /* yacc.c:1646  */
+    break;
+
+  case 78:
+#line 261 "parser.y" /* yacc.c:1646  */
+    { (yyval.sValue) = (char *) "bool";}
+#line 1772 "parser.cpp" /* yacc.c:1646  */
+    break;
+
+  case 79:
+#line 262 "parser.y" /* yacc.c:1646  */
+    { (yyval.sValue) = (char *) "char";}
+#line 1778 "parser.cpp" /* yacc.c:1646  */
+    break;
+
+  case 80:
+#line 263 "parser.y" /* yacc.c:1646  */
+    { (yyval.sValue) = (char *) "double";}
+#line 1784 "parser.cpp" /* yacc.c:1646  */
+    break;
+
+  case 81:
+#line 264 "parser.y" /* yacc.c:1646  */
+    { (yyval.sValue) = (char *) "float";}
+#line 1790 "parser.cpp" /* yacc.c:1646  */
+    break;
+
+  case 82:
+#line 265 "parser.y" /* yacc.c:1646  */
+    { (yyval.sValue) = (char *) "int";}
+#line 1796 "parser.cpp" /* yacc.c:1646  */
+    break;
+
+  case 83:
+#line 266 "parser.y" /* yacc.c:1646  */
+    { (yyval.sValue) = (char *) "long";}
+#line 1802 "parser.cpp" /* yacc.c:1646  */
+    break;
+
+  case 84:
+#line 267 "parser.y" /* yacc.c:1646  */
+    { (yyval.sValue) = (char *) "short";}
+#line 1808 "parser.cpp" /* yacc.c:1646  */
+    break;
+
+  case 85:
+#line 268 "parser.y" /* yacc.c:1646  */
+    { (yyval.sValue) = (char *) "string";}
+#line 1814 "parser.cpp" /* yacc.c:1646  */
+    break;
+
+
+#line 1818 "parser.cpp" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1970,7 +2042,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 514 "parser.y" /* yacc.c:1906  */
+#line 516 "parser.y" /* yacc.c:1906  */
 
 
 void yyerror(const char *s) {
