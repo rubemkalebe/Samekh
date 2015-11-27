@@ -9,10 +9,13 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include <fstream>
 #include "SymbolTable.hpp"
 #include "PrimitiveTypeEntry.hpp"
 
 using namespace std;
+
+const string fileOutputName = ".output.c";
 
 extern char *yytext;
 extern int yylineno;
@@ -26,6 +29,7 @@ extern "C" {
 }
 
 SymbolTable *env = new SymbolTable(NULL);
+ofstream out(fileOutputName.c_str());
 %}
 
 %union{
@@ -77,7 +81,7 @@ SymbolTable *env = new SymbolTable(NULL);
 %%
 
 translation_unit
-  : program_file
+  : program_file {out.close();}
   ;
 
 program_file
@@ -85,8 +89,8 @@ program_file
   ;
 
 declarations
-  : declaration {cout << "declaration done!\n";}
-  | declarations declaration {cout << "declarations done!\n";}
+  : declaration {out << "int main() { return 0;}";}
+  | declarations declaration //{out << "declarations done!\n";}
   ;
 
 declaration

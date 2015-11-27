@@ -68,10 +68,13 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include <fstream>
 #include "SymbolTable.hpp"
 #include "PrimitiveTypeEntry.hpp"
 
 using namespace std;
+
+const string fileOutputName = ".output.c";
 
 extern char *yytext;
 extern int yylineno;
@@ -85,8 +88,9 @@ extern "C" {
 }
 
 SymbolTable *env = new SymbolTable(NULL);
+ofstream out(fileOutputName.c_str());
 
-#line 90 "parser.cpp" /* yacc.c:339  */
+#line 94 "parser.cpp" /* yacc.c:339  */
 
 # ifndef YY_NULLPTR
 #  if defined __cplusplus && 201103L <= __cplusplus
@@ -222,7 +226,7 @@ extern int yydebug;
 typedef union YYSTYPE YYSTYPE;
 union YYSTYPE
 {
-#line 31 "parser.y" /* yacc.c:355  */
+#line 35 "parser.y" /* yacc.c:355  */
 
 	int iValue; 	  /* integer value */
 	char cValue;	  /* char value */
@@ -230,7 +234,7 @@ union YYSTYPE
 	char *sValue;	  /* string value */
   double fValue;  /* floating point value */
 
-#line 234 "parser.cpp" /* yacc.c:355  */
+#line 238 "parser.cpp" /* yacc.c:355  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
@@ -245,7 +249,7 @@ int yyparse (void);
 
 /* Copy the second part of user declarations.  */
 
-#line 249 "parser.cpp" /* yacc.c:358  */
+#line 253 "parser.cpp" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -552,26 +556,26 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,    80,    80,    84,    88,    89,    93,    94,    95,    96,
-     100,   104,   108,   109,   113,   114,   118,   119,   123,   124,
-     128,   132,   133,   137,   138,   142,   143,   147,   148,   149,
-     150,   151,   152,   153,   157,   158,   159,   163,   164,   165,
-     169,   173,   174,   175,   179,   180,   181,   185,   186,   190,
-     194,   195,   199,   203,   204,   205,   206,   207,   208,   212,
-     213,   217,   221,   225,   226,   227,   231,   232,   236,   237,
-     241,   242,   246,   247,   251,   255,   256,   260,   261,   262,
-     263,   264,   265,   266,   267,   268,   272,   273,   277,   278,
-     282,   283,   287,   291,   292,   296,   300,   301,   305,   309,
-     310,   314,   315,   319,   320,   324,   325,   326,   330,   331,
-     332,   336,   340,   341,   345,   346,   350,   351,   355,   359,
-     360,   364,   365,   369,   370,   374,   375,   376,   380,   381,
-     382,   386,   387,   391,   392,   396,   397,   401,   402,   403,
-     407,   408,   409,   410,   411,   412,   416,   417,   418,   422,
-     423,   424,   428,   429,   430,   431,   435,   436,   437,   438,
-     442,   443,   447,   451,   452,   453,   454,   455,   456,   457,
-     458,   459,   460,   461,   465,   469,   470,   474,   475,   476,
-     477,   478,   479,   480,   481,   482,   483,   484,   488,   489,
-     493,   497,   498,   502,   503,   507,   508,   512,   513
+       0,    84,    84,    88,    92,    93,    97,    98,    99,   100,
+     104,   108,   112,   113,   117,   118,   122,   123,   127,   128,
+     132,   136,   137,   141,   142,   146,   147,   151,   152,   153,
+     154,   155,   156,   157,   161,   162,   163,   167,   168,   169,
+     173,   177,   178,   179,   183,   184,   185,   189,   190,   194,
+     198,   199,   203,   207,   208,   209,   210,   211,   212,   216,
+     217,   221,   225,   229,   230,   231,   235,   236,   240,   241,
+     245,   246,   250,   251,   255,   259,   260,   264,   265,   266,
+     267,   268,   269,   270,   271,   272,   276,   277,   281,   282,
+     286,   287,   291,   295,   296,   300,   304,   305,   309,   313,
+     314,   318,   319,   323,   324,   328,   329,   330,   334,   335,
+     336,   340,   344,   345,   349,   350,   354,   355,   359,   363,
+     364,   368,   369,   373,   374,   378,   379,   380,   384,   385,
+     386,   390,   391,   395,   396,   400,   401,   405,   406,   407,
+     411,   412,   413,   414,   415,   416,   420,   421,   422,   426,
+     427,   428,   432,   433,   434,   435,   439,   440,   441,   442,
+     446,   447,   451,   455,   456,   457,   458,   459,   460,   461,
+     462,   463,   464,   465,   469,   473,   474,   478,   479,   480,
+     481,   482,   483,   484,   485,   486,   487,   488,   492,   493,
+     497,   501,   502,   506,   507,   511,   512,   516,   517
 };
 #endif
 
@@ -1741,80 +1745,80 @@ yyreduce:
   YY_REDUCE_PRINT (yyn);
   switch (yyn)
     {
-        case 4:
-#line 88 "parser.y" /* yacc.c:1646  */
-    {cout << "declaration done!\n";}
-#line 1748 "parser.cpp" /* yacc.c:1646  */
+        case 2:
+#line 84 "parser.y" /* yacc.c:1646  */
+    {out.close();}
+#line 1752 "parser.cpp" /* yacc.c:1646  */
     break;
 
-  case 5:
-#line 89 "parser.y" /* yacc.c:1646  */
-    {cout << "declarations done!\n";}
-#line 1754 "parser.cpp" /* yacc.c:1646  */
+  case 4:
+#line 92 "parser.y" /* yacc.c:1646  */
+    {out << "int main() { return 0;}";}
+#line 1758 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 75:
-#line 255 "parser.y" /* yacc.c:1646  */
+#line 259 "parser.y" /* yacc.c:1646  */
     {cout << (yyvsp[0].sValue) << endl;}
-#line 1760 "parser.cpp" /* yacc.c:1646  */
+#line 1764 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 77:
-#line 260 "parser.y" /* yacc.c:1646  */
+#line 264 "parser.y" /* yacc.c:1646  */
     { (yyval.sValue) = (char *) "auto";}
-#line 1766 "parser.cpp" /* yacc.c:1646  */
+#line 1770 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 78:
-#line 261 "parser.y" /* yacc.c:1646  */
+#line 265 "parser.y" /* yacc.c:1646  */
     { (yyval.sValue) = (char *) "bool";}
-#line 1772 "parser.cpp" /* yacc.c:1646  */
+#line 1776 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 79:
-#line 262 "parser.y" /* yacc.c:1646  */
+#line 266 "parser.y" /* yacc.c:1646  */
     { (yyval.sValue) = (char *) "char";}
-#line 1778 "parser.cpp" /* yacc.c:1646  */
+#line 1782 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 80:
-#line 263 "parser.y" /* yacc.c:1646  */
+#line 267 "parser.y" /* yacc.c:1646  */
     { (yyval.sValue) = (char *) "double";}
-#line 1784 "parser.cpp" /* yacc.c:1646  */
+#line 1788 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 81:
-#line 264 "parser.y" /* yacc.c:1646  */
+#line 268 "parser.y" /* yacc.c:1646  */
     { (yyval.sValue) = (char *) "float";}
-#line 1790 "parser.cpp" /* yacc.c:1646  */
+#line 1794 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 82:
-#line 265 "parser.y" /* yacc.c:1646  */
+#line 269 "parser.y" /* yacc.c:1646  */
     { (yyval.sValue) = (char *) "int";}
-#line 1796 "parser.cpp" /* yacc.c:1646  */
+#line 1800 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 83:
-#line 266 "parser.y" /* yacc.c:1646  */
+#line 270 "parser.y" /* yacc.c:1646  */
     { (yyval.sValue) = (char *) "long";}
-#line 1802 "parser.cpp" /* yacc.c:1646  */
+#line 1806 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 84:
-#line 267 "parser.y" /* yacc.c:1646  */
+#line 271 "parser.y" /* yacc.c:1646  */
     { (yyval.sValue) = (char *) "short";}
-#line 1808 "parser.cpp" /* yacc.c:1646  */
+#line 1812 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 85:
-#line 268 "parser.y" /* yacc.c:1646  */
+#line 272 "parser.y" /* yacc.c:1646  */
     { (yyval.sValue) = (char *) "string";}
-#line 1814 "parser.cpp" /* yacc.c:1646  */
+#line 1818 "parser.cpp" /* yacc.c:1646  */
     break;
 
 
-#line 1818 "parser.cpp" /* yacc.c:1646  */
+#line 1822 "parser.cpp" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -2042,7 +2046,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 516 "parser.y" /* yacc.c:1906  */
+#line 520 "parser.y" /* yacc.c:1906  */
 
 
 void yyerror(const char *s) {
