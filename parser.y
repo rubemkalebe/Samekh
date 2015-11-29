@@ -32,6 +32,16 @@ extern "C" {
 
 char* getType(string type1, string type2);
 
+bool isCompatible(string type1, string target);
+
+bool isPointer(string id);
+
+string pointersOfAType(string decl);
+
+string filterIDofArray(string decl);
+
+string ignorePointers(string decl);
+
 SymbolTable *env = new SymbolTable(NULL);
 
 TypesTable typesTable;
@@ -45,13 +55,15 @@ string typeToStore = "";
 %code requires {
   typedef struct {
     char* type;     /* type associated */
-    char* lexeme;   /* lexame -- string */
+    char* lexeme;   /* lexeme -- string */
   } nodeType;
+
+  nodeType* copyNode(nodeType* orig);
 }
 
 %union{
 	char* lexeme;
-  nodeType node;
+  nodeType* node;
 };
 
 %token <lexeme> IDENTIFIER
@@ -63,7 +75,7 @@ string typeToStore = "";
 %token <lexeme> DOT
 %token <lexeme> CHAR                 COMMA               CONTINUE                CONST
 %token <lexeme> ENUM                 ELSE                ELSIF
-%token <lexeme> FLOAT                FOR
+%token <lexeme> DOUBLE                FOR
 %token <lexeme> IF                   INT
 %token <lexeme> L_PAREN              L_SQ_PAREN          L_BRACE                 L_SHIFT
 %token <lexeme> LOG_NOT              LOG_AND             LOG_OR                  LOG_SC_AND        LOG_SC_OR
@@ -93,9 +105,12 @@ string typeToStore = "";
 %type <node> cast_expression logical_unary_expression
 %type <node> multiplicative_expression additive_expression shift_expression relational_expression equality_expression
 %type <node> and_expression exclusive_or_expression inclusive_or_expression conditional_and_expression
+%type <node> variable_initializer array_initializers
 
 %type <lexeme> arithmetic_unary_operator logical_unary_operator assignment_operator dim_expr dim_exprs
 %type <lexeme> type_specifier type_name primitive_type declarator_name primitive_type_expression user_type_expression
+%type <lexeme> variable_declarator variable_declarators variable_declaration variable_declarations
+%type <lexeme> modifier modifiers
 
 %start translation_unit
 
@@ -130,7 +145,7 @@ declaration
   : function_declaration
   | procedure_declaration
   | type_declaration
-  | variable_declaration
+  | variable_declaration { cout << $1 << endl; }
   ;
 
 function_declaration
@@ -265,23 +280,35 @@ type_declaration
   ;
 
 variable_declarations
-  : variable_declaration
-  | variable_declarations variable_declaration
+  : variable_declaration { $$ = strdup($1); }
+  | variable_declarations variable_declaration {
+      string s = string($1) + string($2);
+      $$ = strdup((char*) s.c_str());
+    }
   ;
 
 variable_declaration
-  : modifiers type_specifier variable_declarators SEMICOLON {cout << $2 << endl;}
-  |           type_specifier variable_declarators SEMICOLON
+  : modifiers type_specifier variable_declarators SEMICOLON {
+      string s = string($1) + " " + string($2) + " " + string($3) + string($4);
+      $$ = strdup((char*) s.c_str());
+    }
+  | type_specifier variable_declarators SEMICOLON {
+      string s = string($1) + " " + string($2) + string($3);
+      $$ = strdup((char*) s.c_str());
+    }
   ;
 
 modifiers
-  : modifier
-  | modifiers modifier
+  : modifier { $$ = strdup($1); }
+  | modifiers modifier {
+      string s = string($1) + string($2);
+      $$ = strdup((char*) s.c_str());
+    }
   ;
 
 modifier
-  : CONST
-  | STATIC
+  : CONST { $$ = strdup($1); }
+  | STATIC { $$ = strdup($1); }
   ;
 
 type_specifier
@@ -292,17 +319,17 @@ type_specifier
   ;
 
 type_name
-  : primitive_type { $$ = $1; }
+  : primitive_type { $$ = strdup($1); }
   | qualified_name {$$ = (char *) "qualified_name";}
   ;
 
 primitive_type
-  : AUTO { $$ = $1; }
-  | BOOL { $$ = $1; }
-  | INT { $$ = $1; }
-  | LONG { $$ = $1; }
-  | FLOAT { $$ = $1; }
-  | STRING { $$ = $1; }
+  : AUTO { $$ = strdup($1); }
+  | BOOL { $$ = strdup($1); }
+  | INT { $$ = strdup($1); }
+  | LONG { $$ = strdup($1); }
+  | DOUBLE { $$ = strdup($1); }
+  | STRING { $$ = strdup($1); }
   ;
 
 discriminant
@@ -326,7 +353,7 @@ qualified_name
         nodeType no;
         no.type = $1;
         no.lexeme = $1;
-        $$ = no;
+        $$ = copyNode(&no);
       } else {
         yyerror("Type undeclared");
         YYERROR;
@@ -353,399 +380,438 @@ choice
   ;
 
 variable_declarators
-  : variable_declarator
-  | variable_declarators COMMA variable_declarator
+  : variable_declarator { $$ = strdup($1); }
+  | variable_declarators COMMA variable_declarator {
+      string s = string($1) + string($2) + string($3);
+      $$ = strdup((char*) s.c_str());
+    }
   ;
 
-variable_declarator // RETORNAR STRING
+variable_declarator
   : declarator_name {
-      if(env->get($1) == NULL) {
+      if(env->get(filterIDofArray($1)) == NULL) {
         PrimitiveTypeEntry pt(typeToStore);
-        env->put($1, pt);
+        env->put(filterIDofArray($1), pt);
       } else {
         yyerror("Identifier previously declared");
         YYERROR;
       }
       env->print();
+      $$ = strdup($1);
     }
-  | declarator_name ASSIGN variable_initializer
+  | declarator_name ASSIGN variable_initializer {
+      if(env->get(filterIDofArray($1)) == NULL && isCompatible(ignorePointers(typeToStore), string($3->type))) {
+        PrimitiveTypeEntry pt(typeToStore);
+        env->put(filterIDofArray($1), pt);
+      } else {
+        yyerror("Identifier previously declared or invalid assignment");
+        YYERROR;
+      }
+      env->print();
+      string s = string($1) + " " + string($2) + " " + string($3->lexeme);
+      $$ = strdup((char*) s.c_str());
+    }
   ;
 
 declarator_name
   : IDENTIFIER { $$ = strdup($1); }
   | declarator_name dim_exprs {
       string s = string($1) + string($2);
-      cout << "olha: " << s << endl;
+      typeToStore += pointersOfAType($2);
       $$ = strdup((char*) s.c_str());
     }
   ;
 
 variable_initializer
-  : expression
-  | L_BRACE R_BRACE
-  | L_BRACE array_initializers R_BRACE
+  : expression  { $$ = copyNode($1); }
+  | L_BRACE R_BRACE {
+      if(!isPointer(typeToStore)) {
+        yyerror("Invalid initialization");
+        YYERROR;
+      }
+      string s = string($1) + string($2);
+      nodeType no;
+      no.type = (char*) "empty";
+      no.lexeme = (char*) s.c_str();
+      $$ = copyNode(&no);
+    }
+  | L_BRACE array_initializers R_BRACE {
+      if(!isPointer(typeToStore)) {
+        yyerror("Invalid initialization");
+        YYERROR;
+      }
+      string s = string($1) + string($2->lexeme) + string($3);
+      nodeType no;
+      no.type = (char*) string($2->type).c_str();
+      no.lexeme = (char*) s.c_str();
+      $$ = copyNode(&no);
+    }
   ;
 
 array_initializers
-  : variable_initializer
-  | array_initializers COMMA variable_initializer
-  | array_initializers COMMA
+  : variable_initializer { $$ = copyNode($1); }
+  | array_initializers COMMA variable_initializer {
+      string s = string($1->lexeme) + string($2) + string($3->lexeme);
+      nodeType no;
+      no.type = getType(string($1->type), string($3->type));
+      if(no.type == NULL) {
+        string msg = "invalid conversion from \'" + string($1->type) + "\' to \'" + string($3->type) + "\'";
+        yyerror(msg.c_str());
+        YYERROR;
+      }
+      no.lexeme = (char*) s.c_str();
+      $$ = copyNode(&no);
+    }
   ;
 
 expression
-  : assignment_expression { $$ = $1; }
+  : assignment_expression { $$ = copyNode($1); }
   ;
 
 assignment_expression
-  : conditional_or_expression { $$ = $1; }
+  : conditional_or_expression { $$ = copyNode($1); }
   | unary_expression assignment_operator assignment_expression {
-      string s = string($1.lexeme) + string($2) + string($3.lexeme);
+      string s = string($1->lexeme) + string($2) + string($3->lexeme);
       nodeType no;
       no.lexeme = (char*) s.c_str();
-      no.type = getType($1.type, $3.type);
+      no.type = getType($1->type, $3->type);
       if(no.type == NULL) {
-        string msg = "invalid conversion from \'" + string($1.type) + "\' to \'" + string($3.type) + "\'";
+        string msg = "invalid conversion from \'" + string($1->type) + "\' to \'" + string($3->type) + "\'";
         yyerror(msg.c_str());
         YYERROR;
       } else {
-        $$ = no;
+        $$ = copyNode(&no);
       }
     }
   ;
 
 unary_expression
   : arithmetic_unary_operator cast_expression {
-      string s = string($1) + string($2.lexeme);
+      string s = string($1) + string($2->lexeme);
       nodeType no;
-      no.type = $2.type;
+      no.type = $2->type;
       no.lexeme = (char*) s.c_str();
-      $$ = no;
+      $$ = copyNode(&no);
     }
-	| logical_unary_expression { $$ = $1; }
+	| logical_unary_expression { $$ = copyNode($1); }
   ;
 
 logical_unary_expression
-  : postfix_expression { $$ = $1; }
+  : postfix_expression { $$ = copyNode($1); }
 	| logical_unary_operator unary_expression {
-      string s = string($1) + string($2.lexeme);
+      string s = string($1) + string($2->lexeme);
       nodeType no;
-      no.type = $2.type;
+      no.type = $2->type;
       no.lexeme = (char*) s.c_str();
-      $$ = no;
+      $$ = copyNode(&no);
     }
   ;
 
 postfix_expression
-  : primary_expression { $$ = $1; }
+  : primary_expression { $$ = copyNode($1); }
   ;
 
 primary_expression
-  : qualified_name { $$ = $1; }
-  | not_just_name { $$ = $1; }
+  : qualified_name { $$ = copyNode($1); }
+  | not_just_name { $$ = copyNode($1); }
   ;
 
 arithmetic_unary_operator
-  : OP_PLUS { $$ = $1; }
-  | OP_MINUS { $$ = $1; }
+  : OP_PLUS { $$ = strdup($1); }
+  | OP_MINUS { $$ = strdup($1); }
   ;
 
 logical_unary_operator
-  : BITWISE_COMPLEMENT { $$ = $1; }
-  | LOG_NOT { $$ = $1; }
+  : BITWISE_COMPLEMENT { $$ = strdup($1); }
+  | LOG_NOT { $$ = strdup($1); }
   ;
 
 conditional_or_expression
-  : conditional_and_expression { $$ = $1; }
+  : conditional_and_expression { $$ = copyNode($1); }
   | conditional_or_expression LOG_OR conditional_and_expression
   | conditional_or_expression LOG_SC_OR conditional_and_expression {
-      string s = string($1.lexeme) + "||" + string($3.lexeme);
+      string s = string($1->lexeme) + "||" + string($3->lexeme);
       nodeType no;
       no.lexeme = (char*) s.c_str();
-      no.type = getType($1.type, $3.type);
+      no.type = getType($1->type, $3->type);
       if(no.type == NULL) {
-        string msg = "invalid conversion from \'" + string($1.type) + "\' to \'" + string($3.type) + "\'";
+        string msg = "invalid conversion from \'" + string($1->type) + "\' to \'" + string($3->type) + "\'";
         yyerror(msg.c_str());
         YYERROR;
       } else {
-        $$ = no;
+        $$ = copyNode(&no);
       }
     }
   ;
 
 conditional_and_expression
-  : inclusive_or_expression { $$ = $1; }
+  : inclusive_or_expression { $$ = copyNode($1); }
   | conditional_and_expression LOG_AND inclusive_or_expression
   | conditional_and_expression LOG_SC_AND inclusive_or_expression {
-      string s = string($1.lexeme) + "&&" + string($3.lexeme);
+      string s = string($1->lexeme) + "&&" + string($3->lexeme);
       nodeType no;
       no.lexeme = (char*) s.c_str();
-      no.type = getType($1.type, $3.type);
+      no.type = getType($1->type, $3->type);
       if(no.type == NULL) {
-        string msg = "invalid conversion from \'" + string($1.type) + "\' to \'" + string($3.type) + "\'";
+        string msg = "invalid conversion from \'" + string($1->type) + "\' to \'" + string($3->type) + "\'";
         yyerror(msg.c_str());
         YYERROR;
       } else {
-        $$ = no;
+        $$ = copyNode(&no);
       }
     }
   ;
 
 inclusive_or_expression
-  : exclusive_or_expression { $$ = $1; }
+  : exclusive_or_expression { $$ = copyNode($1); }
   | inclusive_or_expression BITWISE_OR exclusive_or_expression {
-      string s = string($1.lexeme) + string($2) + string($3.lexeme);
+      string s = string($1->lexeme) + string($2) + string($3->lexeme);
       nodeType no;
       no.lexeme = (char*) s.c_str();
-      no.type = getType($1.type, $3.type);
+      no.type = getType($1->type, $3->type);
       if(no.type == NULL) {
-        string msg = "invalid conversion from \'" + string($1.type) + "\' to \'" + string($3.type) + "\'";
+        string msg = "invalid conversion from \'" + string($1->type) + "\' to \'" + string($3->type) + "\'";
         yyerror(msg.c_str());
         YYERROR;
       } else {
-        $$ = no;
+        $$ = copyNode(&no);
       }
     }
   ;
 
 exclusive_or_expression
-  : and_expression { $$ = $1; }
+  : and_expression { $$ = copyNode($1); }
   | exclusive_or_expression BITWISE_OR_EXC and_expression {
-      string s = string($1.lexeme) + string($2) + string($3.lexeme);
+      string s = string($1->lexeme) + string($2) + string($3->lexeme);
       nodeType no;
       no.lexeme = (char*) s.c_str();
-      no.type = getType($1.type, $3.type);
+      no.type = getType($1->type, $3->type);
       if(no.type == NULL) {
-        string msg = "invalid conversion from \'" + string($1.type) + "\' to \'" + string($3.type) + "\'";
+        string msg = "invalid conversion from \'" + string($1->type) + "\' to \'" + string($3->type) + "\'";
         yyerror(msg.c_str());
         YYERROR;
       } else {
-        $$ = no;
+        $$ = copyNode(&no);
       }
     }
   ;
 
 and_expression
-  : equality_expression { $$ = $1; }
+  : equality_expression { $$ = copyNode($1); }
   | and_expression AMPERSAND equality_expression {
-      string s = string($1.lexeme) + string($2) + string($3.lexeme);
+      string s = string($1->lexeme) + string($2) + string($3->lexeme);
       nodeType no;
       no.lexeme = (char*) s.c_str();
-      no.type = getType($1.type, $3.type);
+      no.type = getType($1->type, $3->type);
       if(no.type == NULL) {
-        string msg = "invalid conversion from \'" + string($1.type) + "\' to \'" + string($3.type) + "\'";
+        string msg = "invalid conversion from \'" + string($1->type) + "\' to \'" + string($3->type) + "\'";
         yyerror(msg.c_str());
         YYERROR;
       } else {
-        $$ = no;
+        $$ = copyNode(&no);
       }
     }
   ;
 
 equality_expression
-  : relational_expression { $$ = $1; }
+  : relational_expression { $$ = copyNode($1); }
   | equality_expression OP_EQ relational_expression {
-      string s = string($1.lexeme) + string($2) + string($3.lexeme);
+      string s = string($1->lexeme) + string($2) + string($3->lexeme);
       nodeType no;
       no.lexeme = (char*) s.c_str();
-      no.type = getType($1.type, $3.type);
+      no.type = getType($1->type, $3->type);
       if(no.type == NULL) {
-        string msg = "invalid conversion from \'" + string($1.type) + "\' to \'" + string($3.type) + "\'";
+        string msg = "invalid conversion from \'" + string($1->type) + "\' to \'" + string($3->type) + "\'";
         yyerror(msg.c_str());
         YYERROR;
       } else {
-        $$ = no;
+        $$ = copyNode(&no);
       }
     }
   | equality_expression OP_NE relational_expression {
-      string s = string($1.lexeme) + string($2) + string($3.lexeme);
+      string s = string($1->lexeme) + string($2) + string($3->lexeme);
       nodeType no;
       no.lexeme = (char*) s.c_str();
-      no.type = getType($1.type, $3.type);
+      no.type = getType($1->type, $3->type);
       if(no.type == NULL) {
-        string msg = "invalid conversion from \'" + string($1.type) + "\' to \'" + string($3.type) + "\'";
+        string msg = "invalid conversion from \'" + string($1->type) + "\' to \'" + string($3->type) + "\'";
         yyerror(msg.c_str());
         YYERROR;
       } else {
-        $$ = no;
+        $$ = copyNode(&no);
       }
     }
   ;
 
 relational_expression
-	: shift_expression { $$ = $1; }
+	: shift_expression { $$ = copyNode($1); }
   | relational_expression OP_LT shift_expression {
-      string s = string($1.lexeme) + string($2) + string($3.lexeme);
+      string s = string($1->lexeme) + string($2) + string($3->lexeme);
       nodeType no;
       no.lexeme = (char*) s.c_str();
-      no.type = getType($1.type, $3.type);
+      no.type = getType($1->type, $3->type);
       if(no.type == NULL) {
-        string msg = "invalid conversion from \'" + string($1.type) + "\' to \'" + string($3.type) + "\'";
+        string msg = "invalid conversion from \'" + string($1->type) + "\' to \'" + string($3->type) + "\'";
         yyerror(msg.c_str());
         YYERROR;
       } else {
-        $$ = no;
+        $$ = copyNode(&no);
       }
     }
 	| relational_expression OP_GT shift_expression {
-      string s = string($1.lexeme) + string($2) + string($3.lexeme);
+      string s = string($1->lexeme) + string($2) + string($3->lexeme);
       nodeType no;
       no.lexeme = (char*) s.c_str();
-      no.type = getType($1.type, $3.type);
+      no.type = getType($1->type, $3->type);
       if(no.type == NULL) {
-        string msg = "invalid conversion from \'" + string($1.type) + "\' to \'" + string($3.type) + "\'";
+        string msg = "invalid conversion from \'" + string($1->type) + "\' to \'" + string($3->type) + "\'";
         yyerror(msg.c_str());
         YYERROR;
       } else {
-        $$ = no;
+        $$ = copyNode(&no);
       }
     }
 	| relational_expression OP_LET shift_expression {
-      string s = string($1.lexeme) + string($2) + string($3.lexeme);
+      string s = string($1->lexeme) + string($2) + string($3->lexeme);
       nodeType no;
       no.lexeme = (char*) s.c_str();
-      no.type = getType($1.type, $3.type);
+      no.type = getType($1->type, $3->type);
       if(no.type == NULL) {
-        string msg = "invalid conversion from \'" + string($1.type) + "\' to \'" + string($3.type) + "\'";
+        string msg = "invalid conversion from \'" + string($1->type) + "\' to \'" + string($3->type) + "\'";
         yyerror(msg.c_str());
         YYERROR;
       } else {
-        $$ = no;
+        $$ = copyNode(&no);
       }
     }
 	| relational_expression OP_GET shift_expression {
-      string s = string($1.lexeme) + string($2) + string($3.lexeme);
+      string s = string($1->lexeme) + string($2) + string($3->lexeme);
       nodeType no;
       no.lexeme = (char*) s.c_str();
-      no.type = getType($1.type, $3.type);
+      no.type = getType($1->type, $3->type);
       if(no.type == NULL) {
-        string msg = "invalid conversion from \'" + string($1.type) + "\' to \'" + string($3.type) + "\'";
+        string msg = "invalid conversion from \'" + string($1->type) + "\' to \'" + string($3->type) + "\'";
         yyerror(msg.c_str());
         YYERROR;
       } else {
-        $$ = no;
+        $$ = copyNode(&no);
       }
     }
 	;
 
 shift_expression
-  : additive_expression { cout << "result> " << $1.lexeme << endl; $$ = $1; }
+  : additive_expression { $$ = copyNode($1); }
   | shift_expression L_SHIFT additive_expression {
-      string s = string($1.lexeme) + string($2) + string($3.lexeme);
+      string s = string($1->lexeme) + string($2) + string($3->lexeme);
       nodeType no;
       no.lexeme = (char*) s.c_str();
-      no.type = getType($1.type, $3.type);
+      no.type = getType($1->type, $3->type);
       if(no.type == NULL) {
-        string msg = "invalid conversion from \'" + string($1.type) + "\' to \'" + string($3.type) + "\'";
+        string msg = "invalid conversion from \'" + string($1->type) + "\' to \'" + string($3->type) + "\'";
         yyerror(msg.c_str());
         YYERROR;
       } else {
-        $$ = no;
+        $$ = copyNode(&no);
       }
     }
   | shift_expression R_SHIFT additive_expression {
-      string s = string($1.lexeme) + string($2) + string($3.lexeme);
+      string s = string($1->lexeme) + string($2) + string($3->lexeme);
       nodeType no;
       no.lexeme = (char*) s.c_str();
-      no.type = getType($1.type, $3.type);
+      no.type = getType($1->type, $3->type);
       if(no.type == NULL) {
-        string msg = "invalid conversion from \'" + string($1.type) + "\' to \'" + string($3.type) + "\'";
+        string msg = "invalid conversion from \'" + string($1->type) + "\' to \'" + string($3->type) + "\'";
         yyerror(msg.c_str());
         YYERROR;
       } else {
-        $$ = no;
+        $$ = copyNode(&no);
       }
     }
   ;
 
 additive_expression
-  : multiplicative_expression { $$ = $1; }
+  : multiplicative_expression { $$ = copyNode($1); }
   | additive_expression OP_PLUS multiplicative_expression {
-
-      string s1 = string($1.lexeme); string s3 = string($3.lexeme);
-
-      cout << "olha>1 " << s1 << " " << s3 << endl;
-      string s = string($1.lexeme) + string($2) + string($3.lexeme);
-      cout << "olha>2 " << s1 << " " << s3 << endl;
-      cout << "olha>: " << s << endl;
+      string s = string($1->lexeme) + string($2) + string($3->lexeme);
       nodeType no;
       no.lexeme = (char*) s.c_str();
-      no.type = getType($1.type, $3.type);
+      no.type = getType($1->type, $3->type);
       if(no.type == NULL) {
-        string msg = "invalid conversion from \'" + string($1.type) + "\' to \'" + string($3.type) + "\'";
+        string msg = "invalid conversion from \'" + string($1->type) + "\' to \'" + string($3->type) + "\'";
         yyerror(msg.c_str());
         YYERROR;
       } else {
-        $$ = no;
+        $$ = copyNode(&no);
       }
     }
 	| additive_expression OP_MINUS multiplicative_expression {
-      string s = string($1.lexeme) + string($2) + string($3.lexeme);
+      string s = string($1->lexeme) + string($2) + string($3->lexeme);
       nodeType no;
       no.lexeme = (char*) s.c_str();
-      no.type = getType($1.type, $3.type);
+      no.type = getType($1->type, $3->type);
       if(no.type == NULL) {
-        string msg = "invalid conversion from \'" + string($1.type) + "\' to \'" + string($3.type) + "\'";
+        string msg = "invalid conversion from \'" + string($1->type) + "\' to \'" + string($3->type) + "\'";
         yyerror(msg.c_str());
         YYERROR;
       } else {
-        $$ = no;
+        $$ = copyNode(&no);
       }
     }
   ;
 
 multiplicative_expression
-  : cast_expression { $$ = $1; }
+  : cast_expression { $$ = copyNode($1); }
 	| multiplicative_expression OP_ASTERISK cast_expression {
-      string s = string($1.lexeme) + string($2) + string($3.lexeme);
+      string s = string($1->lexeme) + string($2) + string($3->lexeme);
       nodeType no;
       no.lexeme = (char*) s.c_str();
-      no.type = getType($1.type, $3.type);
+      no.type = getType($1->type, $3->type);
       if(no.type == NULL) {
-        string msg = "invalid conversion from \'" + string($1.type) + "\' to \'" + string($3.type) + "\'";
+        string msg = "invalid conversion from \'" + string($1->type) + "\' to \'" + string($3->type) + "\'";
         yyerror(msg.c_str());
         YYERROR;
       } else {
-        $$ = no;
+        $$ = copyNode(&no);
       }
     }
 	| multiplicative_expression OP_DIV cast_expression {
-      string s = string($1.lexeme) + string($2) + string($3.lexeme);
+      string s = string($1->lexeme) + string($2) + string($3->lexeme);
       nodeType no;
       no.lexeme = (char*) s.c_str();
-      no.type = getType($1.type, $3.type);
-      $$ = no;
+      no.type = getType($1->type, $3->type);
+      $$ = copyNode(&no);
     }
 	| multiplicative_expression OP_MOD cast_expression {
-      string s = string($1.lexeme) + string($2) + string($3.lexeme);
+      string s = string($1->lexeme) + string($2) + string($3->lexeme);
       nodeType no;
       no.lexeme = (char*) s.c_str();
-      no.type = getType($1.type, $3.type);
-      $$ = no;
+      no.type = getType($1->type, $3->type);
+      $$ = copyNode(&no);
     }
   ;
 
 cast_expression
-  : unary_expression { $$ = $1; }
+  : unary_expression { $$ = copyNode($1); }
   | L_PAREN primitive_type_expression R_PAREN cast_expression {
-      string s = string($1) + string($2) + string($3) + string($4.lexeme);
+      string s = string($1) + string($2) + string($3) + string($4->lexeme);
       nodeType no;
       no.lexeme = (char*) s.c_str();
       no.type = $2;
-      $$ = no;
+      $$ = copyNode(&no);
     }
 	| L_PAREN user_type_expression R_PAREN cast_expression {
-      string s = string($1) + string($2) + string($3) + string($4.lexeme);
+      string s = string($1) + string($2) + string($3) + string($4->lexeme);
       nodeType no;
       no.lexeme = (char*) s.c_str();
       no.type = $2;
-      $$ = no;
+      $$ = copyNode(&no);
     }
 	| L_PAREN expression R_PAREN logical_unary_expression {
-      string s = string($1) + string($2.lexeme) + string($3) + string($4.lexeme);
+      string s = string($1) + string($2->lexeme) + string($3) + string($4->lexeme);
       nodeType no;
       no.lexeme = (char*) s.c_str();
-      no.type = $2.type;
-      $$ = no;
+      no.type = $2->type;
+      $$ = copyNode(&no);
     }
   ;
 
@@ -759,42 +825,42 @@ user_type_expression
   ;
 
 assignment_operator
-  : ASSIGN { $$ = $1; }
-  | ASSIGN_PLUS { $$ = $1; }
-  | ASSIGN_MINUS { $$ = $1; }
-  | ASSIGN_PRODUCT { $$ = $1; }
-  | ASSIGN_DIV { $$ = $1; }
-  | ASSIGN_MOD { $$ = $1; }
-  | ASSIGN_BITWISE_AND { $$ = $1; }
-  | ASSIGN_BITWISE_OR { $$ = $1; }
-  | ASSIGN_BITWISE_OR_EXC { $$ = $1; }
-  | ASSIGN_L_SHIFT { $$ = $1; }
-  | ASSIGN_R_SHIFT { $$ = $1; }
+  : ASSIGN { $$ = strdup($1); }
+  | ASSIGN_PLUS { $$ = strdup($1); }
+  | ASSIGN_MINUS { $$ = strdup($1); }
+  | ASSIGN_PRODUCT { $$ = strdup($1); }
+  | ASSIGN_DIV { $$ = strdup($1); }
+  | ASSIGN_MOD { $$ = strdup($1); }
+  | ASSIGN_BITWISE_AND { $$ = strdup($1); }
+  | ASSIGN_BITWISE_OR { $$ = strdup($1); }
+  | ASSIGN_BITWISE_OR_EXC { $$ = strdup($1); }
+  | ASSIGN_L_SHIFT { $$ = strdup($1); }
+  | ASSIGN_R_SHIFT { $$ = strdup($1); }
   ;
 
 not_just_name
-  : complex_primary { $$ = $1; }
+  : complex_primary { $$ = copyNode($1); }
   ;
 
 complex_primary
   : L_PAREN expression R_PAREN {
-      string s = string($1) + string($2.lexeme) + string($3);
+      string s = string($1) + string($2->lexeme) + string($3);
       nodeType no;
       no.lexeme = (char*) s.c_str();
-      no.type = $2.type;
-      $$ = no;
+      no.type = $2->type;
+      $$ = copyNode(&no);
     }
-  | complex_primary_no_parenthesis { $$ = $1; }
+  | complex_primary_no_parenthesis { $$ = copyNode($1); }
   ;
 
 complex_primary_no_parenthesis
-  : BOOL_LITERAL { cout << $1.lexeme << " => " << $1.type << endl; $$ = $1; }
-  | OCTAL { cout << $1.lexeme << " => " << $1.type << endl; $$ = $1; }
-  | DECIMAL { cout << $1.lexeme << " => " << $1.type << endl; $$ = $1; }
-  | HEX { cout << $1.lexeme << " => " << $1.type << endl; $$ = $1; }
-  | FLOATING_POINT { cout << $1.lexeme << " => " << $1.type << endl; $$ = $1; }
-  | NNULL { cout << $1.lexeme << " => " << $1.type << endl; $$ = $1; }
-  | STRING_LITERAL { cout << $1.lexeme << " => " << $1.type << endl; $$ = $1; }
+  : BOOL_LITERAL { $$ = copyNode($1); }
+  | OCTAL { $$ = copyNode($1); }
+  | DECIMAL { $$ = copyNode($1); }
+  | HEX { $$ = copyNode($1); }
+  | FLOATING_POINT { $$ = copyNode($1); }
+  | NNULL { $$ = copyNode($1); }
+  | STRING_LITERAL { $$ = copyNode($1); }
   | array_access
   | field_access
   | subprogram_call
@@ -827,21 +893,18 @@ argument_list
 dim_exprs
   : dim_expr { $$ = strdup($1); }
   | dim_exprs dim_expr {
-      cout << "olhaS2: " << string($1) << " " << string($2) << endl;
-      string s = string(strdup($1)) + string(strdup($2));
-      //cout << "olha: " << string($1) + string($2) << endl;
+      string s = string($1) + string($2);
       $$ = strdup((char*) s.c_str());
     }
   ;
 
 dim_expr
   : L_SQ_PAREN expression R_SQ_PAREN {
-      if(strcmp($2.type, (char*) "int") != 0) {
+      if(strcmp($2->type, (char*) "int") != 0) {
         yyerror("size of array must be an integer");
         YYERROR;
       }
-      string s = string($1) + string($2.lexeme) + string($3);
-      cout << "olhaS1: " << s << endl;
+      string s = string($1) + string($2->lexeme) + string($3);
       $$ = strdup((char*) s.c_str());
     }
   ;
@@ -860,21 +923,111 @@ void yyerror(const char *s) {
 char* getType(string type1, string type2) {
   if(type1 == "int" && type2 == "int") {
     return (char*) "int";
-  } else if((type1 == "int" && type2 == "float") || (type1 == "float" && type2 == "int")) {
-    return (char*) "float";
+  } else if((type1 == "int" && type2 == "double") || (type1 == "double" && type2 == "int")) {
+    return (char*) "double";
   } else if((type1 == "int" && type2 == "long") || (type1 == "long" && type2 == "int")) {
     return (char*) "long";
   } else if(type1 == "long" && type2 == "long") {
     return (char*) "long";
   } else if(type1 == "bool" && type2 == "bool") {
     return (char*) "bool";
-  } else if(type1 == "float" && type2 == "float") {
-    return (char*) "float";
-  } else if((type1 == "long" && type2 == "float") || (type1 == "float" && type2 == "long")) {
-    return (char*) "float";
+  } else if(type1 == "double" && type2 == "double") {
+    return (char*) "double";
+  } else if((type1 == "long" && type2 == "double") || (type1 == "double" && type2 == "long")) {
+    return (char*) "double";
   } else if(type1 == "string" && type2 == "string") {
     return (char*) "string";
   } else {
     return NULL;
   }
+}
+
+/*bool isCompatible(string type1, string type2, string target) {
+  if(type1 == target && type2 == target) {
+    return true;
+  } else if((type1 == "int" && type2 == "double") || (type1 == "double" && type2 == "int") && (target == "int" || target == "double")) {
+    return true;
+  } else if((type1 == "int" && type2 == "long") || (type1 == "long" && type2 == "int") && (target == "int" || target == "long")) {
+    return true;
+  } else if((type1 == "long" && type2 == "double") || (type1 == "double" && type2 == "long") && (target == "long" || target == "double")) {
+    return true;
+  } else {
+    return false;
+  }
+}*/
+
+bool isCompatible(string type1, string target) {
+  if(type1 == target) {
+    return true;
+  } else if(type1 == "int" && target == "int") {
+    return true;
+  } else if((type1 == "int" && target == "double") || (type1 == "double" && target == "int")) {
+    return true;
+  } else if((type1 == "int" && target == "long") || (type1 == "long" && target == "int")) {
+    return true;
+  } else if(type1 == "long" && target == "long") {
+    return true;
+  } else if(type1 == "bool" && target == "bool") {
+    return true;
+  } else if(type1 == "double" && target == "double") {
+    return true;
+  } else if((type1 == "long" && target == "double") || (type1 == "double" && target == "long")) {
+    return true;
+  } else if(type1 == "string" && target == "string") {
+    return true;
+  } else if(target == "empty") {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+nodeType* copyNode(nodeType* orig) {
+  nodeType* no = new nodeType();
+  no->lexeme = strdup(orig->lexeme);
+  no->type = strdup(orig->type);
+  return no;
+}
+
+string pointersOfAType(string decl) {
+  string s = "";
+  for(int i = 0; i < decl.size(); i++) {
+    if(decl[i] == '[') {
+      s += "*";
+    }
+  }
+  return s;
+}
+
+string filterIDofArray(string decl) {
+  string id = "";
+  for(int i = 0; i < decl.size(); i++) {
+    if(decl[i] != '[') {
+      id += decl[i];
+    } else {
+      break;
+    }
+  }
+  return id;
+}
+
+string ignorePointers(string decl) {
+  string s = "";
+  for(int i = 0; i < decl.size(); i++) {
+    if(decl[i] != '*') {
+      s += decl[i];
+    } else {
+      break;
+    }
+  }
+  return s;
+}
+
+bool isPointer(string id) {
+  for(int i = 0; i < id.size(); i++) {
+    if(id[i] == '*') {
+      return true;
+    }
+  }
+  return false;
 }

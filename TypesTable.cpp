@@ -3,7 +3,7 @@
 TypesTable::TypesTable() {
   types.push_back("auto");
   types.push_back("bool");
-  types.push_back("float");
+  types.push_back("double");
   types.push_back("int");
   types.push_back("long");
   types.push_back("string");

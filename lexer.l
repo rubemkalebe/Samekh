@@ -52,7 +52,7 @@ ES  (\\(['"\?\\abfnrtv]|[0-7]{1,3}|x[a-fA-F0-9]+))
 "auto"					{ yylval.lexeme = "auto"; return AUTO; }
 "bool"					{ yylval.lexeme = "bool"; return BOOL; }
 "enum"					{ yylval.lexeme = "enum"; return ENUM; }
-"float"					{ yylval.lexeme = "double"; return FLOAT; }
+"double"				{ yylval.lexeme = "double"; return DOUBLE; }
 "int"						{ yylval.lexeme = "int"; return INT; }
 "long"					{ yylval.lexeme = "long"; return LONG; }
 "string"				{ yylval.lexeme = "string"; return STRING; }
@@ -106,20 +106,23 @@ ES  (\\(['"\?\\abfnrtv]|[0-7]{1,3}|x[a-fA-F0-9]+))
 "->"						{ yylval.lexeme = "->"; return OP_PTR; }
 
 "null" {
-  yylval.node.type = "null";
-  yylval.node.lexeme = "NULL";
+  yylval.node = (nodeType*) malloc(sizeof(nodeType));
+  yylval.node->type = "null";
+  yylval.node->lexeme = "NULL";
   return NNULL;
 }
 
 "true" {
-  yylval.node.type = "bool";
-  yylval.node.lexeme = "true";
+  yylval.node = (nodeType*) malloc(sizeof(nodeType));
+  yylval.node->type = "bool";
+  yylval.node->lexeme = "true";
   return BOOL_LITERAL;
  }
 
 "false" {
-  yylval.node.type = "bool";
-  yylval.node.lexeme = "false";
+  yylval.node = (nodeType*) malloc(sizeof(nodeType));
+  yylval.node->type = "bool";
+  yylval.node->lexeme = "false";
   return BOOL_LITERAL;
 }
 
@@ -129,26 +132,30 @@ ES  (\\(['"\?\\abfnrtv]|[0-7]{1,3}|x[a-fA-F0-9]+))
 }
 
 0[0-7]+ {
-	yylval.node.type = "int";
-  yylval.node.lexeme = strdup(yytext);
+  yylval.node = (nodeType*) malloc(sizeof(nodeType));
+	yylval.node->type = "int";
+  yylval.node->lexeme = strdup(yytext);
 	return OCTAL;
 }
 
 [0-9]+	{
-  yylval.node.type = "int";
-  yylval.node.lexeme = strdup(yytext);
+  yylval.node = (nodeType*) malloc(sizeof(nodeType));
+  yylval.node->type = "int";
+  yylval.node->lexeme = strdup(yytext);
 	return DECIMAL;
 }
 
 0[xX][0-9a-fA-F]+ {
-  yylval.node.type = "int";
-  yylval.node.lexeme = strdup(yytext);
+  yylval.node = (nodeType*) malloc(sizeof(nodeType));
+  yylval.node->type = "int";
+  yylval.node->lexeme = strdup(yytext);
 	return HEX;
 }
 
 [0-9]+([.][0-9]+)?([eE][+-]?[0-9]+)? {
-  yylval.node.type = "float";
-  yylval.node.lexeme = strdup(yytext);
+  yylval.node = (nodeType*) malloc(sizeof(nodeType));
+  yylval.node->type = "float";
+  yylval.node->lexeme = strdup(yytext);
 	return FLOATING_POINT;
 }
 
@@ -156,8 +163,9 @@ ES  (\\(['"\?\\abfnrtv]|[0-7]{1,3}|x[a-fA-F0-9]+))
 	/* Uma string começa com '"' seguida de qualquer numero de caracteres que nao sao '"'
 			ou sao uma \ seguida de um caractere, e termina com '"' */
 
-  yylval.node.type = "string";
-  yylval.node.lexeme = strdup(yytext);
+  yylval.node = (nodeType*) malloc(sizeof(nodeType));
+  yylval.node->type = "string";
+  yylval.node->lexeme = strdup(yytext);
 	return STRING_LITERAL;
 }
 

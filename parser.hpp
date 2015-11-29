@@ -40,14 +40,16 @@
 extern int yydebug;
 #endif
 /* "%code requires" blocks.  */
-#line 45 "parser.y" /* yacc.c:1909  */
+#line 55 "parser.y" /* yacc.c:1909  */
 
   typedef struct {
     char* type;     /* type associated */
-    char* lexeme;   /* lexame -- string */
+    char* lexeme;   /* lexeme -- string */
   } nodeType;
 
-#line 51 "parser.hpp" /* yacc.c:1909  */
+  nodeType* copyNode(nodeType* orig);
+
+#line 53 "parser.hpp" /* yacc.c:1909  */
 
 /* Token type.  */
 #ifndef YYTOKENTYPE
@@ -81,7 +83,7 @@ extern int yydebug;
     ENUM = 282,
     ELSE = 283,
     ELSIF = 284,
-    FLOAT = 285,
+    DOUBLE = 285,
     FOR = 286,
     IF = 287,
     INT = 288,
@@ -152,12 +154,12 @@ extern int yydebug;
 typedef union YYSTYPE YYSTYPE;
 union YYSTYPE
 {
-#line 52 "parser.y" /* yacc.c:1909  */
+#line 64 "parser.y" /* yacc.c:1909  */
 
 	char* lexeme;
-  nodeType node;
+  nodeType* node;
 
-#line 161 "parser.hpp" /* yacc.c:1909  */
+#line 163 "parser.hpp" /* yacc.c:1909  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
