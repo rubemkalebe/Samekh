@@ -4,6 +4,8 @@
 #include <wait.h>
 #include "parser.cpp"
 
+using namespace std;
+
 extern FILE* yyin;
 
 int main(int argc, char *argv[]) {
@@ -19,7 +21,8 @@ int main(int argc, char *argv[]) {
   	printf("O codigo passou sem erros!!\n");
     int pid;
     if((pid = fork()) == 0) {
-      execl("/usr/bin/gcc", "gcc", fileOutputName.c_str(), NULL);
+      string param = fileOutputName + " -lstdc++";
+      execl("/usr/bin/gcc", "gcc", fileOutputName.c_str(), (char*) "-lstdc++", NULL);
       exit(0);
     } else {
       while (waitpid(pid, NULL, WNOHANG)== 0)

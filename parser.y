@@ -17,7 +17,7 @@
 
 using namespace std;
 
-const string fileOutputName = ".output.c";
+const string fileOutputName = ".output.cpp";
 
 extern char *yytext;
 extern int yylineno;
@@ -118,6 +118,7 @@ string typeToStore = "";
 
 translation_unit
   : program_file {
+      out << "int main() { return 0; }\n";
       out.close();
     }
   ;
@@ -145,7 +146,7 @@ declaration
   : function_declaration
   | procedure_declaration
   | type_declaration
-  | variable_declaration { cout << $1 << endl; }
+  | variable_declaration { out << $1 << endl; }
   ;
 
 function_declaration
@@ -396,7 +397,6 @@ variable_declarator
         yyerror("Identifier previously declared");
         YYERROR;
       }
-      env->print();
       $$ = strdup($1);
     }
   | declarator_name ASSIGN variable_initializer {
@@ -407,7 +407,6 @@ variable_declarator
         yyerror("Identifier previously declared or invalid assignment");
         YYERROR;
       }
-      env->print();
       string s = string($1) + " " + string($2) + " " + string($3->lexeme);
       $$ = strdup((char*) s.c_str());
     }

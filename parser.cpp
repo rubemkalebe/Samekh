@@ -76,7 +76,7 @@
 
 using namespace std;
 
-const string fileOutputName = ".output.c";
+const string fileOutputName = ".output.cpp";
 
 extern char *yytext;
 extern int yylineno;
@@ -580,26 +580,26 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,   120,   120,   126,   130,   141,   145,   146,   147,   148,
-     152,   156,   160,   161,   165,   166,   170,   171,   175,   176,
-     180,   184,   185,   189,   190,   194,   195,   199,   200,   201,
-     202,   203,   204,   205,   209,   210,   211,   215,   216,   217,
-     221,   225,   226,   227,   231,   232,   233,   237,   238,   242,
-     246,   247,   251,   255,   256,   257,   258,   259,   260,   264,
-     265,   269,   273,   277,   278,   279,   283,   284,   291,   295,
-     302,   303,   310,   311,   315,   322,   323,   327,   328,   329,
-     330,   331,   332,   336,   337,   341,   342,   346,   347,   351,
-     365,   366,   370,   374,   375,   379,   383,   384,   391,   402,
-     417,   418,   426,   427,   438,   452,   453,   468,   472,   473,
-     489,   496,   500,   501,   511,   515,   516,   520,   521,   525,
-     526,   530,   531,   532,   548,   549,   550,   566,   567,   583,
-     584,   600,   601,   617,   618,   631,   647,   648,   661,   674,
-     687,   703,   704,   717,   733,   734,   747,   763,   764,   777,
-     784,   794,   795,   802,   809,   819,   820,   824,   828,   829,
-     830,   831,   832,   833,   834,   835,   836,   837,   838,   842,
-     846,   853,   857,   858,   859,   860,   861,   862,   863,   864,
-     865,   866,   870,   871,   875,   879,   880,   884,   885,   889,
-     890,   894,   895,   902,   913,   914
+       0,   120,   120,   127,   131,   142,   146,   147,   148,   149,
+     153,   157,   161,   162,   166,   167,   171,   172,   176,   177,
+     181,   185,   186,   190,   191,   195,   196,   200,   201,   202,
+     203,   204,   205,   206,   210,   211,   212,   216,   217,   218,
+     222,   226,   227,   228,   232,   233,   234,   238,   239,   243,
+     247,   248,   252,   256,   257,   258,   259,   260,   261,   265,
+     266,   270,   274,   278,   279,   280,   284,   285,   292,   296,
+     303,   304,   311,   312,   316,   323,   324,   328,   329,   330,
+     331,   332,   333,   337,   338,   342,   343,   347,   348,   352,
+     366,   367,   371,   375,   376,   380,   384,   385,   392,   403,
+     418,   419,   427,   428,   439,   453,   454,   469,   473,   474,
+     490,   497,   501,   502,   512,   516,   517,   521,   522,   526,
+     527,   531,   532,   533,   549,   550,   551,   567,   568,   584,
+     585,   601,   602,   618,   619,   632,   648,   649,   662,   675,
+     688,   704,   705,   718,   734,   735,   748,   764,   765,   778,
+     785,   795,   796,   803,   810,   820,   821,   825,   829,   830,
+     831,   832,   833,   834,   835,   836,   837,   838,   839,   843,
+     847,   854,   858,   859,   860,   861,   862,   863,   864,   865,
+     866,   867,   871,   872,   876,   880,   881,   885,   886,   890,
+     891,   895,   896,   903,   914,   915
 };
 #endif
 
@@ -1744,13 +1744,14 @@ yyreduce:
         case 2:
 #line 120 "parser.y" /* yacc.c:1646  */
     {
+      out << "int main() { return 0; }\n";
       out.close();
     }
-#line 1750 "parser.cpp" /* yacc.c:1646  */
+#line 1751 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 4:
-#line 130 "parser.y" /* yacc.c:1646  */
+#line 131 "parser.y" /* yacc.c:1646  */
     {
       PrimitiveTypeEntry pt("char");
       /*if(env->get("a") == NULL) {
@@ -1762,134 +1763,134 @@ yyreduce:
         YYERROR;
       }*/
     }
-#line 1766 "parser.cpp" /* yacc.c:1646  */
+#line 1767 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 9:
-#line 148 "parser.y" /* yacc.c:1646  */
-    { cout << (yyvsp[0].lexeme) << endl; }
-#line 1772 "parser.cpp" /* yacc.c:1646  */
+#line 149 "parser.y" /* yacc.c:1646  */
+    { out << (yyvsp[0].lexeme) << endl; }
+#line 1773 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 66:
-#line 283 "parser.y" /* yacc.c:1646  */
+#line 284 "parser.y" /* yacc.c:1646  */
     { (yyval.lexeme) = strdup((yyvsp[0].lexeme)); }
-#line 1778 "parser.cpp" /* yacc.c:1646  */
+#line 1779 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 67:
-#line 284 "parser.y" /* yacc.c:1646  */
+#line 285 "parser.y" /* yacc.c:1646  */
     {
       string s = string((yyvsp[-1].lexeme)) + string((yyvsp[0].lexeme));
       (yyval.lexeme) = strdup((char*) s.c_str());
     }
-#line 1787 "parser.cpp" /* yacc.c:1646  */
+#line 1788 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 68:
-#line 291 "parser.y" /* yacc.c:1646  */
+#line 292 "parser.y" /* yacc.c:1646  */
     {
       string s = string((yyvsp[-3].lexeme)) + " " + string((yyvsp[-2].lexeme)) + " " + string((yyvsp[-1].lexeme)) + string((yyvsp[0].lexeme));
       (yyval.lexeme) = strdup((char*) s.c_str());
     }
-#line 1796 "parser.cpp" /* yacc.c:1646  */
+#line 1797 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 69:
-#line 295 "parser.y" /* yacc.c:1646  */
+#line 296 "parser.y" /* yacc.c:1646  */
     {
       string s = string((yyvsp[-2].lexeme)) + " " + string((yyvsp[-1].lexeme)) + string((yyvsp[0].lexeme));
       (yyval.lexeme) = strdup((char*) s.c_str());
     }
-#line 1805 "parser.cpp" /* yacc.c:1646  */
+#line 1806 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 70:
-#line 302 "parser.y" /* yacc.c:1646  */
+#line 303 "parser.y" /* yacc.c:1646  */
     { (yyval.lexeme) = strdup((yyvsp[0].lexeme)); }
-#line 1811 "parser.cpp" /* yacc.c:1646  */
+#line 1812 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 71:
-#line 303 "parser.y" /* yacc.c:1646  */
+#line 304 "parser.y" /* yacc.c:1646  */
     {
       string s = string((yyvsp[-1].lexeme)) + string((yyvsp[0].lexeme));
       (yyval.lexeme) = strdup((char*) s.c_str());
     }
-#line 1820 "parser.cpp" /* yacc.c:1646  */
+#line 1821 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 72:
-#line 310 "parser.y" /* yacc.c:1646  */
+#line 311 "parser.y" /* yacc.c:1646  */
     { (yyval.lexeme) = strdup((yyvsp[0].lexeme)); }
-#line 1826 "parser.cpp" /* yacc.c:1646  */
+#line 1827 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 73:
-#line 311 "parser.y" /* yacc.c:1646  */
+#line 312 "parser.y" /* yacc.c:1646  */
     { (yyval.lexeme) = strdup((yyvsp[0].lexeme)); }
-#line 1832 "parser.cpp" /* yacc.c:1646  */
+#line 1833 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 74:
-#line 315 "parser.y" /* yacc.c:1646  */
+#line 316 "parser.y" /* yacc.c:1646  */
     {
       typeToStore = (yyvsp[0].lexeme);
       (yyval.lexeme) = (yyvsp[0].lexeme);
     }
-#line 1841 "parser.cpp" /* yacc.c:1646  */
+#line 1842 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 75:
-#line 322 "parser.y" /* yacc.c:1646  */
+#line 323 "parser.y" /* yacc.c:1646  */
     { (yyval.lexeme) = strdup((yyvsp[0].lexeme)); }
-#line 1847 "parser.cpp" /* yacc.c:1646  */
+#line 1848 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 76:
-#line 323 "parser.y" /* yacc.c:1646  */
+#line 324 "parser.y" /* yacc.c:1646  */
     {(yyval.lexeme) = (char *) "qualified_name";}
-#line 1853 "parser.cpp" /* yacc.c:1646  */
+#line 1854 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 77:
-#line 327 "parser.y" /* yacc.c:1646  */
+#line 328 "parser.y" /* yacc.c:1646  */
     { (yyval.lexeme) = strdup((yyvsp[0].lexeme)); }
-#line 1859 "parser.cpp" /* yacc.c:1646  */
+#line 1860 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 78:
-#line 328 "parser.y" /* yacc.c:1646  */
+#line 329 "parser.y" /* yacc.c:1646  */
     { (yyval.lexeme) = strdup((yyvsp[0].lexeme)); }
-#line 1865 "parser.cpp" /* yacc.c:1646  */
+#line 1866 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 79:
-#line 329 "parser.y" /* yacc.c:1646  */
+#line 330 "parser.y" /* yacc.c:1646  */
     { (yyval.lexeme) = strdup((yyvsp[0].lexeme)); }
-#line 1871 "parser.cpp" /* yacc.c:1646  */
+#line 1872 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 80:
-#line 330 "parser.y" /* yacc.c:1646  */
+#line 331 "parser.y" /* yacc.c:1646  */
     { (yyval.lexeme) = strdup((yyvsp[0].lexeme)); }
-#line 1877 "parser.cpp" /* yacc.c:1646  */
+#line 1878 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 81:
-#line 331 "parser.y" /* yacc.c:1646  */
+#line 332 "parser.y" /* yacc.c:1646  */
     { (yyval.lexeme) = strdup((yyvsp[0].lexeme)); }
-#line 1883 "parser.cpp" /* yacc.c:1646  */
+#line 1884 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 82:
-#line 332 "parser.y" /* yacc.c:1646  */
+#line 333 "parser.y" /* yacc.c:1646  */
     { (yyval.lexeme) = strdup((yyvsp[0].lexeme)); }
-#line 1889 "parser.cpp" /* yacc.c:1646  */
+#line 1890 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 89:
-#line 351 "parser.y" /* yacc.c:1646  */
+#line 352 "parser.y" /* yacc.c:1646  */
     {
       if(typesTable.contains((yyvsp[0].lexeme))) {
         nodeType no;
@@ -1901,26 +1902,26 @@ yyreduce:
         YYERROR;
       }
     }
-#line 1905 "parser.cpp" /* yacc.c:1646  */
+#line 1906 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 96:
-#line 383 "parser.y" /* yacc.c:1646  */
+#line 384 "parser.y" /* yacc.c:1646  */
     { (yyval.lexeme) = strdup((yyvsp[0].lexeme)); }
-#line 1911 "parser.cpp" /* yacc.c:1646  */
+#line 1912 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 97:
-#line 384 "parser.y" /* yacc.c:1646  */
+#line 385 "parser.y" /* yacc.c:1646  */
     {
       string s = string((yyvsp[-2].lexeme)) + string((yyvsp[-1].lexeme)) + string((yyvsp[0].lexeme));
       (yyval.lexeme) = strdup((char*) s.c_str());
     }
-#line 1920 "parser.cpp" /* yacc.c:1646  */
+#line 1921 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 98:
-#line 391 "parser.y" /* yacc.c:1646  */
+#line 392 "parser.y" /* yacc.c:1646  */
     {
       if(env->get(filterIDofArray((yyvsp[0].lexeme))) == NULL) {
         PrimitiveTypeEntry pt(typeToStore);
@@ -1932,11 +1933,11 @@ yyreduce:
       env->print();
       (yyval.lexeme) = strdup((yyvsp[0].lexeme));
     }
-#line 1936 "parser.cpp" /* yacc.c:1646  */
+#line 1937 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 99:
-#line 402 "parser.y" /* yacc.c:1646  */
+#line 403 "parser.y" /* yacc.c:1646  */
     {
       if(env->get(filterIDofArray((yyvsp[-2].lexeme))) == NULL && isCompatible(ignorePointers(typeToStore), string((yyvsp[0].node)->type))) {
         PrimitiveTypeEntry pt(typeToStore);
@@ -1949,33 +1950,33 @@ yyreduce:
       string s = string((yyvsp[-2].lexeme)) + " " + string((yyvsp[-1].lexeme)) + " " + string((yyvsp[0].node)->lexeme);
       (yyval.lexeme) = strdup((char*) s.c_str());
     }
-#line 1953 "parser.cpp" /* yacc.c:1646  */
+#line 1954 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 100:
-#line 417 "parser.y" /* yacc.c:1646  */
+#line 418 "parser.y" /* yacc.c:1646  */
     { (yyval.lexeme) = strdup((yyvsp[0].lexeme)); }
-#line 1959 "parser.cpp" /* yacc.c:1646  */
+#line 1960 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 101:
-#line 418 "parser.y" /* yacc.c:1646  */
+#line 419 "parser.y" /* yacc.c:1646  */
     {
       string s = string((yyvsp[-1].lexeme)) + string((yyvsp[0].lexeme));
       typeToStore += pointersOfAType((yyvsp[0].lexeme));
       (yyval.lexeme) = strdup((char*) s.c_str());
     }
-#line 1969 "parser.cpp" /* yacc.c:1646  */
+#line 1970 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 102:
-#line 426 "parser.y" /* yacc.c:1646  */
+#line 427 "parser.y" /* yacc.c:1646  */
     { (yyval.node) = copyNode((yyvsp[0].node)); }
-#line 1975 "parser.cpp" /* yacc.c:1646  */
+#line 1976 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 103:
-#line 427 "parser.y" /* yacc.c:1646  */
+#line 428 "parser.y" /* yacc.c:1646  */
     {
       if(!isPointer(typeToStore)) {
         yyerror("Invalid initialization");
@@ -1987,11 +1988,11 @@ yyreduce:
       no.lexeme = (char*) s.c_str();
       (yyval.node) = copyNode(&no);
     }
-#line 1991 "parser.cpp" /* yacc.c:1646  */
+#line 1992 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 104:
-#line 438 "parser.y" /* yacc.c:1646  */
+#line 439 "parser.y" /* yacc.c:1646  */
     {
       if(!isPointer(typeToStore)) {
         yyerror("Invalid initialization");
@@ -2003,17 +2004,17 @@ yyreduce:
       no.lexeme = (char*) s.c_str();
       (yyval.node) = copyNode(&no);
     }
-#line 2007 "parser.cpp" /* yacc.c:1646  */
+#line 2008 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 105:
-#line 452 "parser.y" /* yacc.c:1646  */
+#line 453 "parser.y" /* yacc.c:1646  */
     { (yyval.node) = copyNode((yyvsp[0].node)); }
-#line 2013 "parser.cpp" /* yacc.c:1646  */
+#line 2014 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 106:
-#line 453 "parser.y" /* yacc.c:1646  */
+#line 454 "parser.y" /* yacc.c:1646  */
     {
       string s = string((yyvsp[-2].node)->lexeme) + string((yyvsp[-1].lexeme)) + string((yyvsp[0].node)->lexeme);
       nodeType no;
@@ -2026,23 +2027,23 @@ yyreduce:
       no.lexeme = (char*) s.c_str();
       (yyval.node) = copyNode(&no);
     }
-#line 2030 "parser.cpp" /* yacc.c:1646  */
+#line 2031 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 107:
-#line 468 "parser.y" /* yacc.c:1646  */
+#line 469 "parser.y" /* yacc.c:1646  */
     { (yyval.node) = copyNode((yyvsp[0].node)); }
-#line 2036 "parser.cpp" /* yacc.c:1646  */
+#line 2037 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 108:
-#line 472 "parser.y" /* yacc.c:1646  */
+#line 473 "parser.y" /* yacc.c:1646  */
     { (yyval.node) = copyNode((yyvsp[0].node)); }
-#line 2042 "parser.cpp" /* yacc.c:1646  */
+#line 2043 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 109:
-#line 473 "parser.y" /* yacc.c:1646  */
+#line 474 "parser.y" /* yacc.c:1646  */
     {
       string s = string((yyvsp[-2].node)->lexeme) + string((yyvsp[-1].lexeme)) + string((yyvsp[0].node)->lexeme);
       nodeType no;
@@ -2056,11 +2057,11 @@ yyreduce:
         (yyval.node) = copyNode(&no);
       }
     }
-#line 2060 "parser.cpp" /* yacc.c:1646  */
+#line 2061 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 110:
-#line 489 "parser.y" /* yacc.c:1646  */
+#line 490 "parser.y" /* yacc.c:1646  */
     {
       string s = string((yyvsp[-1].lexeme)) + string((yyvsp[0].node)->lexeme);
       nodeType no;
@@ -2068,23 +2069,23 @@ yyreduce:
       no.lexeme = (char*) s.c_str();
       (yyval.node) = copyNode(&no);
     }
-#line 2072 "parser.cpp" /* yacc.c:1646  */
+#line 2073 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 111:
-#line 496 "parser.y" /* yacc.c:1646  */
+#line 497 "parser.y" /* yacc.c:1646  */
     { (yyval.node) = copyNode((yyvsp[0].node)); }
-#line 2078 "parser.cpp" /* yacc.c:1646  */
+#line 2079 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 112:
-#line 500 "parser.y" /* yacc.c:1646  */
+#line 501 "parser.y" /* yacc.c:1646  */
     { (yyval.node) = copyNode((yyvsp[0].node)); }
-#line 2084 "parser.cpp" /* yacc.c:1646  */
+#line 2085 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 113:
-#line 501 "parser.y" /* yacc.c:1646  */
+#line 502 "parser.y" /* yacc.c:1646  */
     {
       string s = string((yyvsp[-1].lexeme)) + string((yyvsp[0].node)->lexeme);
       nodeType no;
@@ -2092,59 +2093,59 @@ yyreduce:
       no.lexeme = (char*) s.c_str();
       (yyval.node) = copyNode(&no);
     }
-#line 2096 "parser.cpp" /* yacc.c:1646  */
+#line 2097 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 114:
-#line 511 "parser.y" /* yacc.c:1646  */
+#line 512 "parser.y" /* yacc.c:1646  */
     { (yyval.node) = copyNode((yyvsp[0].node)); }
-#line 2102 "parser.cpp" /* yacc.c:1646  */
+#line 2103 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 115:
-#line 515 "parser.y" /* yacc.c:1646  */
+#line 516 "parser.y" /* yacc.c:1646  */
     { (yyval.node) = copyNode((yyvsp[0].node)); }
-#line 2108 "parser.cpp" /* yacc.c:1646  */
+#line 2109 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 116:
-#line 516 "parser.y" /* yacc.c:1646  */
+#line 517 "parser.y" /* yacc.c:1646  */
     { (yyval.node) = copyNode((yyvsp[0].node)); }
-#line 2114 "parser.cpp" /* yacc.c:1646  */
+#line 2115 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 117:
-#line 520 "parser.y" /* yacc.c:1646  */
+#line 521 "parser.y" /* yacc.c:1646  */
     { (yyval.lexeme) = strdup((yyvsp[0].lexeme)); }
-#line 2120 "parser.cpp" /* yacc.c:1646  */
+#line 2121 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 118:
-#line 521 "parser.y" /* yacc.c:1646  */
+#line 522 "parser.y" /* yacc.c:1646  */
     { (yyval.lexeme) = strdup((yyvsp[0].lexeme)); }
-#line 2126 "parser.cpp" /* yacc.c:1646  */
+#line 2127 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 119:
-#line 525 "parser.y" /* yacc.c:1646  */
+#line 526 "parser.y" /* yacc.c:1646  */
     { (yyval.lexeme) = strdup((yyvsp[0].lexeme)); }
-#line 2132 "parser.cpp" /* yacc.c:1646  */
+#line 2133 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 120:
-#line 526 "parser.y" /* yacc.c:1646  */
+#line 527 "parser.y" /* yacc.c:1646  */
     { (yyval.lexeme) = strdup((yyvsp[0].lexeme)); }
-#line 2138 "parser.cpp" /* yacc.c:1646  */
+#line 2139 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 121:
-#line 530 "parser.y" /* yacc.c:1646  */
+#line 531 "parser.y" /* yacc.c:1646  */
     { (yyval.node) = copyNode((yyvsp[0].node)); }
-#line 2144 "parser.cpp" /* yacc.c:1646  */
+#line 2145 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 123:
-#line 532 "parser.y" /* yacc.c:1646  */
+#line 533 "parser.y" /* yacc.c:1646  */
     {
       string s = string((yyvsp[-2].node)->lexeme) + "||" + string((yyvsp[0].node)->lexeme);
       nodeType no;
@@ -2158,17 +2159,17 @@ yyreduce:
         (yyval.node) = copyNode(&no);
       }
     }
-#line 2162 "parser.cpp" /* yacc.c:1646  */
+#line 2163 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 124:
-#line 548 "parser.y" /* yacc.c:1646  */
+#line 549 "parser.y" /* yacc.c:1646  */
     { (yyval.node) = copyNode((yyvsp[0].node)); }
-#line 2168 "parser.cpp" /* yacc.c:1646  */
+#line 2169 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 126:
-#line 550 "parser.y" /* yacc.c:1646  */
+#line 551 "parser.y" /* yacc.c:1646  */
     {
       string s = string((yyvsp[-2].node)->lexeme) + "&&" + string((yyvsp[0].node)->lexeme);
       nodeType no;
@@ -2182,17 +2183,17 @@ yyreduce:
         (yyval.node) = copyNode(&no);
       }
     }
-#line 2186 "parser.cpp" /* yacc.c:1646  */
+#line 2187 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 127:
-#line 566 "parser.y" /* yacc.c:1646  */
+#line 567 "parser.y" /* yacc.c:1646  */
     { (yyval.node) = copyNode((yyvsp[0].node)); }
-#line 2192 "parser.cpp" /* yacc.c:1646  */
+#line 2193 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 128:
-#line 567 "parser.y" /* yacc.c:1646  */
+#line 568 "parser.y" /* yacc.c:1646  */
     {
       string s = string((yyvsp[-2].node)->lexeme) + string((yyvsp[-1].lexeme)) + string((yyvsp[0].node)->lexeme);
       nodeType no;
@@ -2206,17 +2207,17 @@ yyreduce:
         (yyval.node) = copyNode(&no);
       }
     }
-#line 2210 "parser.cpp" /* yacc.c:1646  */
+#line 2211 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 129:
-#line 583 "parser.y" /* yacc.c:1646  */
+#line 584 "parser.y" /* yacc.c:1646  */
     { (yyval.node) = copyNode((yyvsp[0].node)); }
-#line 2216 "parser.cpp" /* yacc.c:1646  */
+#line 2217 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 130:
-#line 584 "parser.y" /* yacc.c:1646  */
+#line 585 "parser.y" /* yacc.c:1646  */
     {
       string s = string((yyvsp[-2].node)->lexeme) + string((yyvsp[-1].lexeme)) + string((yyvsp[0].node)->lexeme);
       nodeType no;
@@ -2230,17 +2231,17 @@ yyreduce:
         (yyval.node) = copyNode(&no);
       }
     }
-#line 2234 "parser.cpp" /* yacc.c:1646  */
+#line 2235 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 131:
-#line 600 "parser.y" /* yacc.c:1646  */
+#line 601 "parser.y" /* yacc.c:1646  */
     { (yyval.node) = copyNode((yyvsp[0].node)); }
-#line 2240 "parser.cpp" /* yacc.c:1646  */
+#line 2241 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 132:
-#line 601 "parser.y" /* yacc.c:1646  */
+#line 602 "parser.y" /* yacc.c:1646  */
     {
       string s = string((yyvsp[-2].node)->lexeme) + string((yyvsp[-1].lexeme)) + string((yyvsp[0].node)->lexeme);
       nodeType no;
@@ -2254,17 +2255,17 @@ yyreduce:
         (yyval.node) = copyNode(&no);
       }
     }
-#line 2258 "parser.cpp" /* yacc.c:1646  */
+#line 2259 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 133:
-#line 617 "parser.y" /* yacc.c:1646  */
+#line 618 "parser.y" /* yacc.c:1646  */
     { (yyval.node) = copyNode((yyvsp[0].node)); }
-#line 2264 "parser.cpp" /* yacc.c:1646  */
+#line 2265 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 134:
-#line 618 "parser.y" /* yacc.c:1646  */
+#line 619 "parser.y" /* yacc.c:1646  */
     {
       string s = string((yyvsp[-2].node)->lexeme) + string((yyvsp[-1].lexeme)) + string((yyvsp[0].node)->lexeme);
       nodeType no;
@@ -2278,11 +2279,11 @@ yyreduce:
         (yyval.node) = copyNode(&no);
       }
     }
-#line 2282 "parser.cpp" /* yacc.c:1646  */
+#line 2283 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 135:
-#line 631 "parser.y" /* yacc.c:1646  */
+#line 632 "parser.y" /* yacc.c:1646  */
     {
       string s = string((yyvsp[-2].node)->lexeme) + string((yyvsp[-1].lexeme)) + string((yyvsp[0].node)->lexeme);
       nodeType no;
@@ -2296,17 +2297,17 @@ yyreduce:
         (yyval.node) = copyNode(&no);
       }
     }
-#line 2300 "parser.cpp" /* yacc.c:1646  */
+#line 2301 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 136:
-#line 647 "parser.y" /* yacc.c:1646  */
+#line 648 "parser.y" /* yacc.c:1646  */
     { (yyval.node) = copyNode((yyvsp[0].node)); }
-#line 2306 "parser.cpp" /* yacc.c:1646  */
+#line 2307 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 137:
-#line 648 "parser.y" /* yacc.c:1646  */
+#line 649 "parser.y" /* yacc.c:1646  */
     {
       string s = string((yyvsp[-2].node)->lexeme) + string((yyvsp[-1].lexeme)) + string((yyvsp[0].node)->lexeme);
       nodeType no;
@@ -2320,11 +2321,11 @@ yyreduce:
         (yyval.node) = copyNode(&no);
       }
     }
-#line 2324 "parser.cpp" /* yacc.c:1646  */
+#line 2325 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 138:
-#line 661 "parser.y" /* yacc.c:1646  */
+#line 662 "parser.y" /* yacc.c:1646  */
     {
       string s = string((yyvsp[-2].node)->lexeme) + string((yyvsp[-1].lexeme)) + string((yyvsp[0].node)->lexeme);
       nodeType no;
@@ -2338,11 +2339,11 @@ yyreduce:
         (yyval.node) = copyNode(&no);
       }
     }
-#line 2342 "parser.cpp" /* yacc.c:1646  */
+#line 2343 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 139:
-#line 674 "parser.y" /* yacc.c:1646  */
+#line 675 "parser.y" /* yacc.c:1646  */
     {
       string s = string((yyvsp[-2].node)->lexeme) + string((yyvsp[-1].lexeme)) + string((yyvsp[0].node)->lexeme);
       nodeType no;
@@ -2356,11 +2357,11 @@ yyreduce:
         (yyval.node) = copyNode(&no);
       }
     }
-#line 2360 "parser.cpp" /* yacc.c:1646  */
+#line 2361 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 140:
-#line 687 "parser.y" /* yacc.c:1646  */
+#line 688 "parser.y" /* yacc.c:1646  */
     {
       string s = string((yyvsp[-2].node)->lexeme) + string((yyvsp[-1].lexeme)) + string((yyvsp[0].node)->lexeme);
       nodeType no;
@@ -2374,17 +2375,17 @@ yyreduce:
         (yyval.node) = copyNode(&no);
       }
     }
-#line 2378 "parser.cpp" /* yacc.c:1646  */
+#line 2379 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 141:
-#line 703 "parser.y" /* yacc.c:1646  */
+#line 704 "parser.y" /* yacc.c:1646  */
     { (yyval.node) = copyNode((yyvsp[0].node)); }
-#line 2384 "parser.cpp" /* yacc.c:1646  */
+#line 2385 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 142:
-#line 704 "parser.y" /* yacc.c:1646  */
+#line 705 "parser.y" /* yacc.c:1646  */
     {
       string s = string((yyvsp[-2].node)->lexeme) + string((yyvsp[-1].lexeme)) + string((yyvsp[0].node)->lexeme);
       nodeType no;
@@ -2398,11 +2399,11 @@ yyreduce:
         (yyval.node) = copyNode(&no);
       }
     }
-#line 2402 "parser.cpp" /* yacc.c:1646  */
+#line 2403 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 143:
-#line 717 "parser.y" /* yacc.c:1646  */
+#line 718 "parser.y" /* yacc.c:1646  */
     {
       string s = string((yyvsp[-2].node)->lexeme) + string((yyvsp[-1].lexeme)) + string((yyvsp[0].node)->lexeme);
       nodeType no;
@@ -2416,17 +2417,17 @@ yyreduce:
         (yyval.node) = copyNode(&no);
       }
     }
-#line 2420 "parser.cpp" /* yacc.c:1646  */
+#line 2421 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 144:
-#line 733 "parser.y" /* yacc.c:1646  */
+#line 734 "parser.y" /* yacc.c:1646  */
     { (yyval.node) = copyNode((yyvsp[0].node)); }
-#line 2426 "parser.cpp" /* yacc.c:1646  */
+#line 2427 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 145:
-#line 734 "parser.y" /* yacc.c:1646  */
+#line 735 "parser.y" /* yacc.c:1646  */
     {
       string s = string((yyvsp[-2].node)->lexeme) + string((yyvsp[-1].lexeme)) + string((yyvsp[0].node)->lexeme);
       nodeType no;
@@ -2440,11 +2441,11 @@ yyreduce:
         (yyval.node) = copyNode(&no);
       }
     }
-#line 2444 "parser.cpp" /* yacc.c:1646  */
+#line 2445 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 146:
-#line 747 "parser.y" /* yacc.c:1646  */
+#line 748 "parser.y" /* yacc.c:1646  */
     {
       string s = string((yyvsp[-2].node)->lexeme) + string((yyvsp[-1].lexeme)) + string((yyvsp[0].node)->lexeme);
       nodeType no;
@@ -2458,17 +2459,17 @@ yyreduce:
         (yyval.node) = copyNode(&no);
       }
     }
-#line 2462 "parser.cpp" /* yacc.c:1646  */
+#line 2463 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 147:
-#line 763 "parser.y" /* yacc.c:1646  */
+#line 764 "parser.y" /* yacc.c:1646  */
     { (yyval.node) = copyNode((yyvsp[0].node)); }
-#line 2468 "parser.cpp" /* yacc.c:1646  */
+#line 2469 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 148:
-#line 764 "parser.y" /* yacc.c:1646  */
+#line 765 "parser.y" /* yacc.c:1646  */
     {
       string s = string((yyvsp[-2].node)->lexeme) + string((yyvsp[-1].lexeme)) + string((yyvsp[0].node)->lexeme);
       nodeType no;
@@ -2482,11 +2483,11 @@ yyreduce:
         (yyval.node) = copyNode(&no);
       }
     }
-#line 2486 "parser.cpp" /* yacc.c:1646  */
+#line 2487 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 149:
-#line 777 "parser.y" /* yacc.c:1646  */
+#line 778 "parser.y" /* yacc.c:1646  */
     {
       string s = string((yyvsp[-2].node)->lexeme) + string((yyvsp[-1].lexeme)) + string((yyvsp[0].node)->lexeme);
       nodeType no;
@@ -2494,11 +2495,11 @@ yyreduce:
       no.type = getType((yyvsp[-2].node)->type, (yyvsp[0].node)->type);
       (yyval.node) = copyNode(&no);
     }
-#line 2498 "parser.cpp" /* yacc.c:1646  */
+#line 2499 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 150:
-#line 784 "parser.y" /* yacc.c:1646  */
+#line 785 "parser.y" /* yacc.c:1646  */
     {
       string s = string((yyvsp[-2].node)->lexeme) + string((yyvsp[-1].lexeme)) + string((yyvsp[0].node)->lexeme);
       nodeType no;
@@ -2506,17 +2507,17 @@ yyreduce:
       no.type = getType((yyvsp[-2].node)->type, (yyvsp[0].node)->type);
       (yyval.node) = copyNode(&no);
     }
-#line 2510 "parser.cpp" /* yacc.c:1646  */
+#line 2511 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 151:
-#line 794 "parser.y" /* yacc.c:1646  */
+#line 795 "parser.y" /* yacc.c:1646  */
     { (yyval.node) = copyNode((yyvsp[0].node)); }
-#line 2516 "parser.cpp" /* yacc.c:1646  */
+#line 2517 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 152:
-#line 795 "parser.y" /* yacc.c:1646  */
+#line 796 "parser.y" /* yacc.c:1646  */
     {
       string s = string((yyvsp[-3].lexeme)) + string((yyvsp[-2].lexeme)) + string((yyvsp[-1].lexeme)) + string((yyvsp[0].node)->lexeme);
       nodeType no;
@@ -2524,11 +2525,11 @@ yyreduce:
       no.type = (yyvsp[-2].lexeme);
       (yyval.node) = copyNode(&no);
     }
-#line 2528 "parser.cpp" /* yacc.c:1646  */
+#line 2529 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 153:
-#line 802 "parser.y" /* yacc.c:1646  */
+#line 803 "parser.y" /* yacc.c:1646  */
     {
       string s = string((yyvsp[-3].lexeme)) + string((yyvsp[-2].lexeme)) + string((yyvsp[-1].lexeme)) + string((yyvsp[0].node)->lexeme);
       nodeType no;
@@ -2536,11 +2537,11 @@ yyreduce:
       no.type = (yyvsp[-2].lexeme);
       (yyval.node) = copyNode(&no);
     }
-#line 2540 "parser.cpp" /* yacc.c:1646  */
+#line 2541 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 154:
-#line 809 "parser.y" /* yacc.c:1646  */
+#line 810 "parser.y" /* yacc.c:1646  */
     {
       string s = string((yyvsp[-3].lexeme)) + string((yyvsp[-2].node)->lexeme) + string((yyvsp[-1].lexeme)) + string((yyvsp[0].node)->lexeme);
       nodeType no;
@@ -2548,83 +2549,83 @@ yyreduce:
       no.type = (yyvsp[-2].node)->type;
       (yyval.node) = copyNode(&no);
     }
-#line 2552 "parser.cpp" /* yacc.c:1646  */
+#line 2553 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 158:
-#line 828 "parser.y" /* yacc.c:1646  */
+#line 829 "parser.y" /* yacc.c:1646  */
     { (yyval.lexeme) = strdup((yyvsp[0].lexeme)); }
-#line 2558 "parser.cpp" /* yacc.c:1646  */
+#line 2559 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 159:
-#line 829 "parser.y" /* yacc.c:1646  */
+#line 830 "parser.y" /* yacc.c:1646  */
     { (yyval.lexeme) = strdup((yyvsp[0].lexeme)); }
-#line 2564 "parser.cpp" /* yacc.c:1646  */
+#line 2565 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 160:
-#line 830 "parser.y" /* yacc.c:1646  */
+#line 831 "parser.y" /* yacc.c:1646  */
     { (yyval.lexeme) = strdup((yyvsp[0].lexeme)); }
-#line 2570 "parser.cpp" /* yacc.c:1646  */
+#line 2571 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 161:
-#line 831 "parser.y" /* yacc.c:1646  */
+#line 832 "parser.y" /* yacc.c:1646  */
     { (yyval.lexeme) = strdup((yyvsp[0].lexeme)); }
-#line 2576 "parser.cpp" /* yacc.c:1646  */
+#line 2577 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 162:
-#line 832 "parser.y" /* yacc.c:1646  */
+#line 833 "parser.y" /* yacc.c:1646  */
     { (yyval.lexeme) = strdup((yyvsp[0].lexeme)); }
-#line 2582 "parser.cpp" /* yacc.c:1646  */
+#line 2583 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 163:
-#line 833 "parser.y" /* yacc.c:1646  */
+#line 834 "parser.y" /* yacc.c:1646  */
     { (yyval.lexeme) = strdup((yyvsp[0].lexeme)); }
-#line 2588 "parser.cpp" /* yacc.c:1646  */
+#line 2589 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 164:
-#line 834 "parser.y" /* yacc.c:1646  */
+#line 835 "parser.y" /* yacc.c:1646  */
     { (yyval.lexeme) = strdup((yyvsp[0].lexeme)); }
-#line 2594 "parser.cpp" /* yacc.c:1646  */
+#line 2595 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 165:
-#line 835 "parser.y" /* yacc.c:1646  */
+#line 836 "parser.y" /* yacc.c:1646  */
     { (yyval.lexeme) = strdup((yyvsp[0].lexeme)); }
-#line 2600 "parser.cpp" /* yacc.c:1646  */
+#line 2601 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 166:
-#line 836 "parser.y" /* yacc.c:1646  */
+#line 837 "parser.y" /* yacc.c:1646  */
     { (yyval.lexeme) = strdup((yyvsp[0].lexeme)); }
-#line 2606 "parser.cpp" /* yacc.c:1646  */
+#line 2607 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 167:
-#line 837 "parser.y" /* yacc.c:1646  */
+#line 838 "parser.y" /* yacc.c:1646  */
     { (yyval.lexeme) = strdup((yyvsp[0].lexeme)); }
-#line 2612 "parser.cpp" /* yacc.c:1646  */
+#line 2613 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 168:
-#line 838 "parser.y" /* yacc.c:1646  */
+#line 839 "parser.y" /* yacc.c:1646  */
     { (yyval.lexeme) = strdup((yyvsp[0].lexeme)); }
-#line 2618 "parser.cpp" /* yacc.c:1646  */
+#line 2619 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 169:
-#line 842 "parser.y" /* yacc.c:1646  */
+#line 843 "parser.y" /* yacc.c:1646  */
     { (yyval.node) = copyNode((yyvsp[0].node)); }
-#line 2624 "parser.cpp" /* yacc.c:1646  */
+#line 2625 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 170:
-#line 846 "parser.y" /* yacc.c:1646  */
+#line 847 "parser.y" /* yacc.c:1646  */
     {
       string s = string((yyvsp[-2].lexeme)) + string((yyvsp[-1].node)->lexeme) + string((yyvsp[0].lexeme));
       nodeType no;
@@ -2632,74 +2633,74 @@ yyreduce:
       no.type = (yyvsp[-1].node)->type;
       (yyval.node) = copyNode(&no);
     }
-#line 2636 "parser.cpp" /* yacc.c:1646  */
+#line 2637 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 171:
-#line 853 "parser.y" /* yacc.c:1646  */
+#line 854 "parser.y" /* yacc.c:1646  */
     { (yyval.node) = copyNode((yyvsp[0].node)); }
-#line 2642 "parser.cpp" /* yacc.c:1646  */
+#line 2643 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 172:
-#line 857 "parser.y" /* yacc.c:1646  */
+#line 858 "parser.y" /* yacc.c:1646  */
     { (yyval.node) = copyNode((yyvsp[0].node)); }
-#line 2648 "parser.cpp" /* yacc.c:1646  */
+#line 2649 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 173:
-#line 858 "parser.y" /* yacc.c:1646  */
+#line 859 "parser.y" /* yacc.c:1646  */
     { (yyval.node) = copyNode((yyvsp[0].node)); }
-#line 2654 "parser.cpp" /* yacc.c:1646  */
+#line 2655 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 174:
-#line 859 "parser.y" /* yacc.c:1646  */
+#line 860 "parser.y" /* yacc.c:1646  */
     { (yyval.node) = copyNode((yyvsp[0].node)); }
-#line 2660 "parser.cpp" /* yacc.c:1646  */
+#line 2661 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 175:
-#line 860 "parser.y" /* yacc.c:1646  */
+#line 861 "parser.y" /* yacc.c:1646  */
     { (yyval.node) = copyNode((yyvsp[0].node)); }
-#line 2666 "parser.cpp" /* yacc.c:1646  */
+#line 2667 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 176:
-#line 861 "parser.y" /* yacc.c:1646  */
+#line 862 "parser.y" /* yacc.c:1646  */
     { (yyval.node) = copyNode((yyvsp[0].node)); }
-#line 2672 "parser.cpp" /* yacc.c:1646  */
+#line 2673 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 177:
-#line 862 "parser.y" /* yacc.c:1646  */
+#line 863 "parser.y" /* yacc.c:1646  */
     { (yyval.node) = copyNode((yyvsp[0].node)); }
-#line 2678 "parser.cpp" /* yacc.c:1646  */
+#line 2679 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 178:
-#line 863 "parser.y" /* yacc.c:1646  */
+#line 864 "parser.y" /* yacc.c:1646  */
     { (yyval.node) = copyNode((yyvsp[0].node)); }
-#line 2684 "parser.cpp" /* yacc.c:1646  */
+#line 2685 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 191:
-#line 894 "parser.y" /* yacc.c:1646  */
+#line 895 "parser.y" /* yacc.c:1646  */
     { (yyval.lexeme) = strdup((yyvsp[0].lexeme)); }
-#line 2690 "parser.cpp" /* yacc.c:1646  */
+#line 2691 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 192:
-#line 895 "parser.y" /* yacc.c:1646  */
+#line 896 "parser.y" /* yacc.c:1646  */
     {
       string s = string((yyvsp[-1].lexeme)) + string((yyvsp[0].lexeme));
       (yyval.lexeme) = strdup((char*) s.c_str());
     }
-#line 2699 "parser.cpp" /* yacc.c:1646  */
+#line 2700 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 193:
-#line 902 "parser.y" /* yacc.c:1646  */
+#line 903 "parser.y" /* yacc.c:1646  */
     {
       if(strcmp((yyvsp[-1].node)->type, (char*) "int") != 0) {
         yyerror("size of array must be an integer");
@@ -2708,11 +2709,11 @@ yyreduce:
       string s = string((yyvsp[-2].lexeme)) + string((yyvsp[-1].node)->lexeme) + string((yyvsp[0].lexeme));
       (yyval.lexeme) = strdup((char*) s.c_str());
     }
-#line 2712 "parser.cpp" /* yacc.c:1646  */
+#line 2713 "parser.cpp" /* yacc.c:1646  */
     break;
 
 
-#line 2716 "parser.cpp" /* yacc.c:1646  */
+#line 2717 "parser.cpp" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -2940,7 +2941,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 917 "parser.y" /* yacc.c:1906  */
+#line 918 "parser.y" /* yacc.c:1906  */
 
 
 void yyerror(const char *s) {
