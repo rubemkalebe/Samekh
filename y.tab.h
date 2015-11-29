@@ -30,8 +30,8 @@
    This special exception was added by the Free Software Foundation in
    version 2.2 of Bison.  */
 
-#ifndef YY_YY_PARSER_HPP_INCLUDED
-# define YY_YY_PARSER_HPP_INCLUDED
+#ifndef YY_YY_Y_TAB_H_INCLUDED
+# define YY_YY_Y_TAB_H_INCLUDED
 /* Debug traces.  */
 #ifndef YYDEBUG
 # define YYDEBUG 0
@@ -47,7 +47,7 @@ extern int yydebug;
     char* lexeme;   /* lexame -- string */
   } nodeType;
 
-#line 51 "parser.hpp" /* yacc.c:1909  */
+#line 51 "y.tab.h" /* yacc.c:1909  */
 
 /* Token type.  */
 #ifndef YYTOKENTYPE
@@ -146,6 +146,97 @@ extern int yydebug;
     NNULL = 347
   };
 #endif
+/* Tokens.  */
+#define IDENTIFIER 258
+#define ASSIGN 259
+#define ASSIGN_PLUS 260
+#define ASSIGN_MINUS 261
+#define ASSIGN_PRODUCT 262
+#define ASSIGN_DIV 263
+#define ASSIGN_MOD 264
+#define ASSIGN_BITWISE_AND 265
+#define ASSIGN_BITWISE_OR 266
+#define ASSIGN_BITWISE_OR_EXC 267
+#define ASSIGN_L_SHIFT 268
+#define ASSIGN_R_SHIFT 269
+#define AMPERSAND 270
+#define AUTO 271
+#define BOOL 272
+#define BREAK 273
+#define BITWISE_COMPLEMENT 274
+#define BITWISE_OR 275
+#define BITWISE_OR_EXC 276
+#define DOT 277
+#define CHAR 278
+#define COMMA 279
+#define CONTINUE 280
+#define CONST 281
+#define ENUM 282
+#define ELSE 283
+#define ELSIF 284
+#define FLOAT 285
+#define FOR 286
+#define IF 287
+#define INT 288
+#define L_PAREN 289
+#define L_SQ_PAREN 290
+#define L_BRACE 291
+#define L_SHIFT 292
+#define LOG_NOT 293
+#define LOG_AND 294
+#define LOG_OR 295
+#define LOG_SC_AND 296
+#define LOG_SC_OR 297
+#define LONG 298
+#define OP_EQ 299
+#define OP_NE 300
+#define OP_PTR 301
+#define OP_PLUS 302
+#define OP_MINUS 303
+#define OP_ASTERISK 304
+#define OP_DIV 305
+#define OP_MOD 306
+#define OP_LET 307
+#define OP_LT 308
+#define OP_GET 309
+#define OP_GT 310
+#define PRINT 311
+#define PRINTLN 312
+#define R_PAREN 313
+#define R_SQ_PAREN 314
+#define R_BRACE 315
+#define R_SHIFT 316
+#define STRING 317
+#define STRUCT 318
+#define STATIC 319
+#define SIZEOF 320
+#define READ 321
+#define RETURN 322
+#define SEMICOLON 323
+#define UNION 324
+#define WHILE 325
+#define CASE 326
+#define END_CASE 327
+#define END_ENUM 328
+#define END_FOR 329
+#define END_FUNCTION 330
+#define END_IF 331
+#define END_PROCEDURE 332
+#define END_STRUCT 333
+#define END_UNION 334
+#define END_WHILE 335
+#define FUNCTION 336
+#define PROCEDURE 337
+#define THEN 338
+#define TYPEOF 339
+#define WHEN 340
+#define STRING_LITERAL 341
+#define DECIMAL 342
+#define HEX 343
+#define OCTAL 344
+#define FLOATING_POINT 345
+#define BOOL_LITERAL 346
+#define NNULL 347
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
@@ -157,7 +248,7 @@ union YYSTYPE
 	char* lexeme;
   nodeType node;
 
-#line 161 "parser.hpp" /* yacc.c:1909  */
+#line 252 "y.tab.h" /* yacc.c:1909  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
@@ -168,4 +259,4 @@ extern YYSTYPE yylval;
 
 int yyparse (void);
 
-#endif /* !YY_YY_PARSER_HPP_INCLUDED  */
+#endif /* !YY_YY_Y_TAB_H_INCLUDED  */

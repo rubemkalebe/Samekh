@@ -20,6 +20,8 @@ public:
 
   Entry* get(std::string lexeme);
 
+  void print();
+
 };
 
 #endif // SYMBOL_TABLE_HPP

@@ -1,13 +1,17 @@
 #ifndef PRIMITIVE_TYPE_ENTRY_HPP
 #define PRIMITIVE_TYPE_ENTRY_HPP
 
+#include <iostream>
+
 #include "Entry.hpp"
+
+using std::string;
 
 class PrimitiveTypeEntry : public Entry {
 
 public:
 
-  PrimitiveTypeEntry(int type);
+  PrimitiveTypeEntry(string type);
 
 };
 

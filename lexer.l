@@ -10,29 +10,21 @@ ES  (\\(['"\?\\abfnrtv]|[0-7]{1,3}|x[a-fA-F0-9]+))
 %{
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "parser.hpp"
 
-int	octal(char *str);
-
-int	hex(char *str);
-
-char getChar(char *str);
-
-void multLineComment(); // foi substituida pela regex
-
-void lineComment(); // foi substituida pela regex
 %}
 
 %option yylineno
 
 %%
 
-"if"						return IF;
-"elsif"         return ELSIF;
-"else"					return ELSE;
-"while"					return WHILE;
-"for"						return FOR;
-"return"				return RETURN;
+"if"						{ yylval.lexeme = "if"; return IF; }
+"elsif"         { yylval.lexeme = "else if"; return ELSIF; }
+"else"					{ yylval.lexeme = "else"; return ELSE; }
+"while"					{ yylval.lexeme = "while"; return WHILE; }
+"for"						{ yylval.lexeme = "for"; return FOR; }
+"return"				{ yylval.lexeme = "return"; return RETURN; }
 "procedure"			return PROCEDURE;
 "function"			return FUNCTION;
 "endcase"				return END_CASE;
@@ -44,123 +36,128 @@ void lineComment(); // foi substituida pela regex
 "endstruct"			return END_STRUCT;
 "endunion"			return END_UNION;
 "endwhile"			return END_WHILE;
-"break"					return BREAK;
-"continue"			return CONTINUE;
+"break"					{ yylval.lexeme = "break"; return BREAK; }
+"continue"			{ yylval.lexeme = "continue"; return CONTINUE; }
 "then"					return THEN;
 "case"					return CASE;
 "when"					return WHEN;
-"const"					return CONST;
-"static"				return STATIC;
-"sizeof"				return SIZEOF;
+"const"					{ yylval.lexeme = "const"; return CONST; }
+"static"				{ yylval.lexeme = "static"; return STATIC; }
+"sizeof"				{ yylval.lexeme = "sizeof"; return SIZEOF; }
 "typeof"				return TYPEOF;
-"print"					return PRINT;
-"println"				return PRINTLN;
-"read"					return READ;
-"null"					return NNULL;
+"print"					{ yylval.lexeme = "printf"; return PRINT; }
+"println"				{ yylval.lexeme = "printf"; return PRINTLN; }
+"read"					{ yylval.lexeme = "scanf"; return READ; }
 
-"auto"					return AUTO;
-"bool"					return BOOL;
-"char"					return CHAR;
-"double"				return DOUBLE;
-"enum"					return ENUM;
-"float"					return FLOAT;
-"int"						return INT;
-"long"					return LONG;
-"short"					return SHORT;
-"string"				return STRING;
-"struct"				return STRUCT;
-"union"					return UNION;
+"auto"					{ yylval.lexeme = "auto"; return AUTO; }
+"bool"					{ yylval.lexeme = "bool"; return BOOL; }
+"enum"					{ yylval.lexeme = "enum"; return ENUM; }
+"float"					{ yylval.lexeme = "double"; return FLOAT; }
+"int"						{ yylval.lexeme = "int"; return INT; }
+"long"					{ yylval.lexeme = "long"; return LONG; }
+"string"				{ yylval.lexeme = "string"; return STRING; }
+"struct"				{ yylval.lexeme = "struct"; return STRUCT; }
+"union"					{ yylval.lexeme = "union"; return UNION; }
 
-"("							return L_PAREN;
-")"							return R_PAREN;
-"["							return L_SQ_PAREN;
-"]"							return R_SQ_PAREN;
-"{"							return L_BRACE;
-"}"							return R_BRACE;
+"("							{ yylval.lexeme = "("; return L_PAREN; }
+")"							{ yylval.lexeme = ")"; return R_PAREN; }
+"["							{ yylval.lexeme = "["; return L_SQ_PAREN; }
+"]"							{ yylval.lexeme = "]"; return R_SQ_PAREN; }
+"{"							{ yylval.lexeme = "{"; return L_BRACE; }
+"}"							{ yylval.lexeme = "}"; return R_BRACE; }
 
-";"							return SEMICOLON;
-"."							return DOT;
-","							return COMMA;
+";"							{ yylval.lexeme = ";"; return SEMICOLON; }
+"."							{ yylval.lexeme = "."; return DOT; }
+","							{ yylval.lexeme = ","; return COMMA; }
 
-"="							return ASSIGN;
-"<"							return OP_LT;
-">"							return OP_GT;
-"<="						return OP_LET;
-">="						return OP_GET;
-"=="						return OP_EQ;
-"!="						return OP_NE;
-"+"							return OP_PLUS;
-"-"							return OP_MINUS;
-"*"							return OP_ASTERISK;
-"/"							return OP_DIV;
-"%"							return OP_MOD;
-"+="						return ASSIGN_PLUS;
-"-="						return ASSIGN_MINUS;
-"*="						return ASSIGN_PRODUCT;
-"/="						return ASSIGN_DIV;
-"%="						return ASSIGN_MOD;
-"!"							return LOG_NOT;
+"="							{ yylval.lexeme = "="; return ASSIGN; }
+"<"							{ yylval.lexeme = "<"; return OP_LT; }
+">"							{ yylval.lexeme = ">"; return OP_GT; }
+"<="						{ yylval.lexeme = "<="; return OP_LET; }
+">="						{ yylval.lexeme = ">="; return OP_GET; }
+"=="						{ yylval.lexeme = "=="; return OP_EQ; }
+"!="						{ yylval.lexeme = "!="; return OP_NE; }
+"+"							{ yylval.lexeme = "+"; return OP_PLUS; }
+"-"							{ yylval.lexeme = "-"; return OP_MINUS; }
+"*"							{ yylval.lexeme = "*"; return OP_ASTERISK; }
+"/"							{ yylval.lexeme = "/"; return OP_DIV; }
+"%"							{ yylval.lexeme = "%"; return OP_MOD; }
+"+="						{ yylval.lexeme = "+="; return ASSIGN_PLUS; }
+"-="						{ yylval.lexeme = "-="; return ASSIGN_MINUS; }
+"*="						{ yylval.lexeme = "*="; return ASSIGN_PRODUCT; }
+"/="						{ yylval.lexeme = "/="; return ASSIGN_DIV; }
+"%="						{ yylval.lexeme = "%="; return ASSIGN_MOD; }
+"!"							{ yylval.lexeme = "!"; return LOG_NOT; }
 "&&"						return LOG_AND;
 "||"						return LOG_OR;
 "&&&"						return LOG_SC_AND;
 "|||"						return LOG_SC_OR;
-"~"							return BITWISE_COMPLEMENT;
-"&"							return AMPERSAND;
-"&="						return ASSIGN_BITWISE_AND;
-"|"							return BITWISE_OR;
-"|="						return ASSIGN_BITWISE_OR;
-"^"							return BITWISE_OR_EXC;
-"^="						return ASSIGN_BITWISE_OR_EXC;
-"<<"						return L_SHIFT;
-"<<="						return ASSIGN_L_SHIFT;
-">>"						return R_SHIFT;
-">>="						return ASSIGN_R_SHIFT;
-"->"						return OP_PTR;
+"~"							{ yylval.lexeme = "~"; return BITWISE_COMPLEMENT; }
+"&"							{ yylval.lexeme = "&"; return AMPERSAND; }
+"&="						{ yylval.lexeme = "&="; return ASSIGN_BITWISE_AND; }
+"|"							{ yylval.lexeme = "|"; return BITWISE_OR; }
+"|="						{ yylval.lexeme = "|="; return ASSIGN_BITWISE_OR; }
+"^"							{ yylval.lexeme = "^"; return BITWISE_OR_EXC; }
+"^="						{ yylval.lexeme = "^="; return ASSIGN_BITWISE_OR_EXC; }
+"<<"						{ yylval.lexeme = "<<"; return L_SHIFT; }
+"<<="						{ yylval.lexeme = "<<="; return ASSIGN_L_SHIFT; }
+">>"						{ yylval.lexeme = ">>"; return R_SHIFT; }
+">>="						{ yylval.lexeme = ">>="; return ASSIGN_R_SHIFT; }
+"->"						{ yylval.lexeme = "->"; return OP_PTR; }
+
+"null" {
+  yylval.node.type = "null";
+  yylval.node.lexeme = "NULL";
+  return NNULL;
+}
 
 "true" {
-  yylval.bValue = 1;
+  yylval.node.type = "bool";
+  yylval.node.lexeme = "true";
   return BOOL_LITERAL;
  }
 
 "false" {
-  yylval.bValue = 0;
+  yylval.node.type = "bool";
+  yylval.node.lexeme = "false";
   return BOOL_LITERAL;
 }
 
 [_a-zA-Z][_a-zA-Z0-9]* {
-	return checkType();
+  yylval.lexeme = strdup(yytext);
+	return IDENTIFIER;
 }
 
 0[0-7]+ {
-	yylval.iValue = octal(yytext);
+	yylval.node.type = "int";
+  yylval.node.lexeme = strdup(yytext);
 	return OCTAL;
 }
 
 [0-9]+	{
-	yylval.iValue = atoi(yytext);
+  yylval.node.type = "int";
+  yylval.node.lexeme = strdup(yytext);
 	return DECIMAL;
 }
 
 0[xX][0-9a-fA-F]+ {
-	yylval.iValue = hex(yytext);
+  yylval.node.type = "int";
+  yylval.node.lexeme = strdup(yytext);
 	return HEX;
 }
 
 [0-9]+([.][0-9]+)?([eE][+-]?[0-9]+)? {
-	yylval.fValue = atof(yytext);
+  yylval.node.type = "float";
+  yylval.node.lexeme = strdup(yytext);
 	return FLOATING_POINT;
-}
-
-"'"([^'\\\n]|{ES})+"'" {
-  yylval.cValue = getChar(yytext);
-  return CHAR_LITERAL;
 }
 
 \"(\\.|[^"])*\" {
 	/* Uma string começa com '"' seguida de qualquer numero de caracteres que nao sao '"'
 			ou sao uma \ seguida de um caractere, e termina com '"' */
 
-	yylval.sValue = yytext;
+  yylval.node.type = "string";
+  yylval.node.lexeme = strdup(yytext);
 	return STRING_LITERAL;
 }
 
@@ -178,72 +175,10 @@ void lineComment(); // foi substituida pela regex
 
 . {
 	fprintf(stderr, "Bad input '%s' at line %d.\n", yytext, yylineno);
+  exit(1);
 }
 %%
 
 int yywrap(void){
 	return 1;
-}
-
-/* Rotina para conversao de octal->decimal */
-int octal(char *str) {
-	int num;
-	(void) sscanf(str, "%o", &num);
-	return num;
-}
-
-/* Rotina para conversao de hex->decimal */
-int hex(char *str) {
-	int num;
-	(void) sscanf(str+2, "%x", &num);
-	return num;
-}
-
-/* Rotina para conversao de string->char */
-char getChar(char *str) {
-	char c = 0;
-  if((char) str[1] == 0x5C && (char) str[2] == 0x61) {
-    c = (char) 0x07;
-  } else if((char) str[1] == 0x5C && (char) str[2] == 0x62) {
-    c = (char) 0x08;
-  } else if((char) str[1] == 0x5C && (char) str[2] == 0x6E) {
-    c = (char) 0x0A;
-  } else if((char) str[1] == 0x5C && (char) str[2] == 0x74) {
-    c = (char) 0x09;
-  } else if((char) str[1] == 0x5C && (char) str[2] == 0x76) {
-    c = (char) 0x0B;
-  } else if((char) str[1] == 0x5C && (char) str[2] == 0x66) {
-    c = (char) 0x0C;
-  } else if((char) str[1] == 0x5C && (char) str[2] == 0x72) {
-    c = (char) 0x0D;
-  } else if((char) str[1] == 0x5C) {
-    fprintf(stderr, "Bad input '%s' at line %d.\n", yytext, yylineno);
-  } else if((char) str[1] >= 0x20 && (char) str[1] < 0x7F) {
-    c = (char) str[1];
-  }
-	return c;
-}
-
-int checkType() {
-	// ajeitar
-	return IDENTIFIER;
-}
-
-
-/* Rotina para ignorar comentarios de multiplas linhas */
-void multLineComment() {
-	char c;
-loop:
-	while((c = input()) != '*' && c != 0)
-		;
-	if((c = input()) != '/' && c != 0) {
-		goto loop;
-	}
-}
-
-/* Rotina para ignorar comentarios de uma unica linha */
-void lineComment() {
-	char c;
-	while((c = input()) != '\n' && c != 0)
-		;
 }

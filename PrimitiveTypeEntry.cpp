@@ -1,6 +1,6 @@
 #include "PrimitiveTypeEntry.hpp"
 #include "Entry.hpp"
 
-PrimitiveTypeEntry::PrimitiveTypeEntry(int type) : Entry(type) {
+PrimitiveTypeEntry::PrimitiveTypeEntry(string type) : Entry(type) {
 
 }

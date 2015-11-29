@@ -17,3 +17,10 @@ Entry* SymbolTable::get(std::string lexeme) {
   }
   return NULL;
 }
+
+void SymbolTable::print() {
+  std::cout << "Tabela\n";
+  for(std::map<std::string, Entry>::iterator it = table.begin(); it != table.end(); it++) {
+    std::cout << it->first << " => " << it->second.getType() << std::endl;
+  }
+}

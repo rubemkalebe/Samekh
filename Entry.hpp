@@ -1,19 +1,23 @@
 #ifndef ENTRY_HPP
 #define ENTRY_HPP
 
+#include <iostream>
+
+using std::string;
+
 class Entry {
 
 protected:
 
-  int type;
+  string type;
 
 public:
 
-  Entry(int type);
+  Entry(string type);
 
-  int getType();
+  string getType();
 
-  void setType(int type);
+  void setType(string type);
 
 };
 

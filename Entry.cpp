@@ -1,13 +1,13 @@
 #include "Entry.hpp"
 
-Entry::Entry(int type) {
+Entry::Entry(string type) {
 	this->type = type;
 }
 
-int Entry::getType() {
+string Entry::getType() {
 	return type;
 }
 
-void Entry::setType(int type) {
+void Entry::setType(string type) {
 	this->type = type;
 }
