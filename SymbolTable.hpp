@@ -3,25 +3,26 @@
 
 #include <iostream>
 #include <map>
-#include "Entry.hpp"
 
+#include "VariableEntry.hpp"
+
+template <class Type>
 class SymbolTable {
 
 private:
 
-  std::map<std::string, Entry> table;
+  std::map<std::string, Type> table;
   SymbolTable *prev;
 
 public:
 
   SymbolTable(SymbolTable *p);
 
-  void put(std::string lexeme, Entry entry);
+  void put(std::string lexeme, Type entry);
 
-  Entry* get(std::string lexeme);
-
-  void print();
+  Type* get(std::string lexeme);
 
 };
 
+#include "VariableEntry.cpp"
 #endif // SYMBOL_TABLE_HPP

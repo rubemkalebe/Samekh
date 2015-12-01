@@ -40,7 +40,7 @@
 extern int yydebug;
 #endif
 /* "%code requires" blocks.  */
-#line 55 "parser.y" /* yacc.c:1909  */
+#line 59 "parser.y" /* yacc.c:1909  */
 
   typedef struct {
     char* type;     /* type associated */
@@ -154,7 +154,7 @@ extern int yydebug;
 typedef union YYSTYPE YYSTYPE;
 union YYSTYPE
 {
-#line 64 "parser.y" /* yacc.c:1909  */
+#line 68 "parser.y" /* yacc.c:1909  */
 
 	char* lexeme;
   nodeType* node;

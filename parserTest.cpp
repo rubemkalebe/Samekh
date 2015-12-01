@@ -17,6 +17,8 @@ int main(int argc, char *argv[]) {
     yyin = stdin;
   }
 
+  fileHeader();
+
   if(!yyparse()) {
   	printf("O codigo passou sem erros!!\n");
     int pid;
@@ -33,7 +35,7 @@ int main(int argc, char *argv[]) {
     printf("O codigo NAO passou!!\n");
   }
 
-  remove(fileOutputName.c_str());
+  //remove(fileOutputName.c_str());
 
   return 0;
 }

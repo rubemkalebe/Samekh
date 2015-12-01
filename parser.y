@@ -11,9 +11,11 @@
 #include <cstring>
 #include <fstream>
 #include <cstring>
+#include <typeinfo>
+
 #include "TypesTable.hpp"
 #include "SymbolTable.hpp"
-#include "PrimitiveTypeEntry.hpp"
+#include "VariableEntry.hpp"
 
 using namespace std;
 
@@ -42,7 +44,9 @@ string filterIDofArray(string decl);
 
 string ignorePointers(string decl);
 
-SymbolTable *env = new SymbolTable(NULL);
+void fileHeader();
+
+SymbolTable<VariableEntry> *env = new SymbolTable<VariableEntry>(NULL);
 
 TypesTable typesTable;
 
@@ -120,6 +124,7 @@ translation_unit
   : program_file {
       out << "int main() { return 0; }\n";
       out.close();
+      delete env;
     }
   ;
 
@@ -128,25 +133,15 @@ program_file
   ;
 
 declarations
-  : declaration {
-      PrimitiveTypeEntry pt("char");
-      /*if(env->get("a") == NULL) {
-        env->put("a", pt);
-        env->print();
-        out << "int main() { return 0;}";
-      } else {
-        yyerror("Identifier previously declared");
-        YYERROR;
-      }*/
-    }
-  | declarations declaration //{out << "declarations done!\n";}
+  : declaration
+  | declarations declaration
   ;
 
 declaration
   : function_declaration
   | procedure_declaration
   | type_declaration
-  | variable_declaration { out << $1 << endl; }
+  | variable_declaration { out << $1 << endl; free($1); }
   ;
 
 function_declaration
@@ -291,18 +286,23 @@ variable_declarations
 variable_declaration
   : modifiers type_specifier variable_declarators SEMICOLON {
       string s = string($1) + " " + string($2) + " " + string($3) + string($4);
+      free($1); free($2); free($3);
       $$ = strdup((char*) s.c_str());
+      typeToStore = "";
     }
   | type_specifier variable_declarators SEMICOLON {
       string s = string($1) + " " + string($2) + string($3);
+      free($1); free($2);
       $$ = strdup((char*) s.c_str());
+      typeToStore = "";
     }
   ;
 
 modifiers
   : modifier { $$ = strdup($1); }
   | modifiers modifier {
-      string s = string($1) + string($2);
+      string s = string($1) + " " + string($2);
+      free($1); free($2);
       $$ = strdup((char*) s.c_str());
     }
   ;
@@ -315,7 +315,7 @@ modifier
 type_specifier
   : type_name {
       typeToStore = $1;
-      $$ = $1;
+      $$ = strdup($1);
     }
   ;
 
@@ -350,13 +350,13 @@ enumerator
 
 qualified_name
   : IDENTIFIER {
-      if(typesTable.contains($1)) {
+      if(typesTable.contains($1) || env->get($1) != NULL) {
         nodeType no;
         no.type = $1;
         no.lexeme = $1;
         $$ = copyNode(&no);
       } else {
-        yyerror("Type undeclared");
+        yyerror("Identifier undeclared");
         YYERROR;
       }
     }
@@ -384,6 +384,7 @@ variable_declarators
   : variable_declarator { $$ = strdup($1); }
   | variable_declarators COMMA variable_declarator {
       string s = string($1) + string($2) + string($3);
+      free($1); free($3);
       $$ = strdup((char*) s.c_str());
     }
   ;
@@ -391,8 +392,14 @@ variable_declarators
 variable_declarator
   : declarator_name {
       if(env->get(filterIDofArray($1)) == NULL) {
-        PrimitiveTypeEntry pt(typeToStore);
-        env->put(filterIDofArray($1), pt);
+        VariableEntry var(typeToStore);
+        env->put(filterIDofArray($1), var);
+        /*Entry* e = env->get(filterIDofArray($1));
+        cout << "olha" << typeid(e).name() << endl;
+        size_t found = string(typeid(e).name()).find("PrimitiveTypeEntry");
+        if(found != string::npos) {
+          cout << "eh PTE@!" << endl;
+        }*/
       } else {
         yyerror("Identifier previously declared");
         YYERROR;
@@ -401,13 +408,14 @@ variable_declarator
     }
   | declarator_name ASSIGN variable_initializer {
       if(env->get(filterIDofArray($1)) == NULL && isCompatible(ignorePointers(typeToStore), string($3->type))) {
-        PrimitiveTypeEntry pt(typeToStore);
-        env->put(filterIDofArray($1), pt);
+        VariableEntry var(typeToStore);
+        env->put(filterIDofArray($1), var);
       } else {
         yyerror("Identifier previously declared or invalid assignment");
         YYERROR;
       }
       string s = string($1) + " " + string($2) + " " + string($3->lexeme);
+      free($1);
       $$ = strdup((char*) s.c_str());
     }
   ;
@@ -871,7 +879,9 @@ array_access
   ;
 
 field_access
-  : postfix_expression DOT IDENTIFIER
+  : postfix_expression DOT IDENTIFIER {
+      cout << "hahaha\n";
+    }
   ;
 
 subprogram_call
@@ -1029,4 +1039,12 @@ bool isPointer(string id) {
     }
   }
   return false;
+}
+
+void fileHeader() {
+  out << "#include <cstdio>" << endl;
+  out << "#include <cstdlib>" << endl;
+  out << "#include <iostream>" << endl;
+  out << "#include <string>" << endl;
+  out << "using namespace std;" << endl << endl;
 }
