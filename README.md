@@ -4,7 +4,7 @@
 
 Aqui serão apresentados os passos necessários para executar e manter o *Samekh Compiler*, compilador para a linguagem de programação Samekh.
 
-Essa linguagem segue as especificações apresentadas na documentação, presente dentro da pasta \verb|docs|.
+Essa linguagem segue as especificações apresentadas na documentação, presente dentro da pasta *docs*.
 
 O compilador foi desenvolvido em linguagem **C++** com o auxílio das ferramentas *flex* e *yacc*. Atualmente ele traduz o código escrito em Samekh para código C++ simplificado, com as restrições que também são apresentadas na documentação.
 
