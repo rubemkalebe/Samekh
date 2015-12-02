@@ -460,7 +460,7 @@ variable_declarators
 
 variable_declarator
   : declarator_name {
-      if(env->get(filterIDofArray($1)) == NULL) {
+      if(env->isValid(filterIDofArray($1))) {
         VariableEntry var(typeToStore);
         env->put(filterIDofArray($1), var);
       } else {
@@ -470,7 +470,7 @@ variable_declarator
       $$ = strdup($1);
     }
   | declarator_name ASSIGN variable_initializer {
-      if(env->get(filterIDofArray($1)) == NULL && isCompatible(ignorePointers(typeToStore), string($3->type))) {
+      if(env->isValid(filterIDofArray($1)) && isCompatible(ignorePointers(typeToStore), string($3->type))) {
         VariableEntry var(typeToStore);
         env->put(filterIDofArray($1), var);
       } else {

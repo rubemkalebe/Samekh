@@ -2093,7 +2093,7 @@ yyreduce:
   case 99:
 #line 462 "src/parser.y" /* yacc.c:1646  */
     {
-      if(env->get(filterIDofArray((yyvsp[0].lexeme))) == NULL) {
+      if(env->isValid(filterIDofArray((yyvsp[0].lexeme)))) {
         VariableEntry var(typeToStore);
         env->put(filterIDofArray((yyvsp[0].lexeme)), var);
       } else {
@@ -2108,7 +2108,7 @@ yyreduce:
   case 100:
 #line 472 "src/parser.y" /* yacc.c:1646  */
     {
-      if(env->get(filterIDofArray((yyvsp[-2].lexeme))) == NULL && isCompatible(ignorePointers(typeToStore), string((yyvsp[0].node)->type))) {
+      if(env->isValid(filterIDofArray((yyvsp[-2].lexeme))) && isCompatible(ignorePointers(typeToStore), string((yyvsp[0].node)->type))) {
         VariableEntry var(typeToStore);
         env->put(filterIDofArray((yyvsp[-2].lexeme)), var);
       } else {

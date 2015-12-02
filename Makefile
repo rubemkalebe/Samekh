@@ -12,7 +12,7 @@ SRC=src/
 OBJ=obj/
 
 main: lex.yy.o VariableTable.o TypesTable SubprogramTable.o
-	$(CP) -I $(INC) $(OBJ)lex.yy.o $(OBJ)VariableTable.o $(OBJ)VariableEntry.o $(OBJ)TypesTable.o $(OBJ)SubprogramTable.o $(OBJ)SubprogramEntry.o $(SRC)parserTest.cpp -o $(EXECUTABLE)
+	$(CP) -I $(INC) $(OBJ)lex.yy.o $(OBJ)VariableTable.o $(OBJ)VariableEntry.o $(OBJ)TypesTable.o $(OBJ)SubprogramTable.o $(OBJ)SubprogramEntry.o $(SRC)Sam.cpp -o $(EXECUTABLE)
 
 lex.yy.o: parser
 	$(CC) -c -I $(INC) $(SRC)lex.yy.c -o $(OBJ)lex.yy.o

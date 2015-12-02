@@ -21,6 +21,8 @@ public:
 
   VariableEntry* get(std::string lexeme);
 
+  bool isValid(std::string lexeme);
+
   void setTable(std::map<std::string, VariableEntry> newTable);
 
   void print();

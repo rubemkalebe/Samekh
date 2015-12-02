@@ -18,6 +18,15 @@ VariableEntry* VariableTable::get(std::string lexeme) {
   return NULL;
 }
 
+bool VariableTable::isValid(std::string lexeme) {
+  std::map<std::string, VariableEntry>::iterator it = table.find(lexeme);
+  if(it != table.end()) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
 void VariableTable::setTable(std::map<std::string, VariableEntry> newTable) {
   this->table = newTable;
 }
