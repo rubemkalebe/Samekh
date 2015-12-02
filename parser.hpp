@@ -40,7 +40,7 @@
 extern int yydebug;
 #endif
 /* "%code requires" blocks.  */
-#line 59 "parser.y" /* yacc.c:1909  */
+#line 70 "parser.y" /* yacc.c:1909  */
 
   typedef struct {
     char* type;     /* type associated */
@@ -124,18 +124,18 @@ extern int yydebug;
     SEMICOLON = 323,
     UNION = 324,
     WHILE = 325,
-    CASE = 326,
-    END_CASE = 327,
-    END_ENUM = 328,
-    END_FOR = 329,
-    END_FUNCTION = 330,
-    END_IF = 331,
-    END_PROCEDURE = 332,
-    END_STRUCT = 333,
-    END_UNION = 334,
-    END_WHILE = 335,
-    FUNCTION = 336,
-    PROCEDURE = 337,
+    END_CASE = 326,
+    END_ENUM = 327,
+    END_FOR = 328,
+    END_FUNCTION = 329,
+    END_IF = 330,
+    END_PROCEDURE = 331,
+    END_STRUCT = 332,
+    END_UNION = 333,
+    END_WHILE = 334,
+    FUNCTION = 335,
+    PROCEDURE = 336,
+    CASE = 337,
     THEN = 338,
     TYPEOF = 339,
     WHEN = 340,
@@ -154,7 +154,7 @@ extern int yydebug;
 typedef union YYSTYPE YYSTYPE;
 union YYSTYPE
 {
-#line 68 "parser.y" /* yacc.c:1909  */
+#line 79 "parser.y" /* yacc.c:1909  */
 
 	char* lexeme;
   nodeType* node;

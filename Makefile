@@ -9,14 +9,20 @@ YACCPARAM=-d
 YACCFILE=parser.y
 EXECUTABLE=parserTest
 
-main: lex.yy.o SymbolTable.o TypesTable
-	$(CP) lex.yy.o SymbolTable.o VariableEntry.o TypesTable.o parserTest.cpp -o $(EXECUTABLE)
+main: lex.yy.o VariableTable.o TypesTable SubprogramTable.o
+	$(CP) lex.yy.o VariableTable.o VariableEntry.o TypesTable.o SubprogramTable.o SubprogramEntry.o parserTest.cpp -o $(EXECUTABLE)
 
 lex.yy.o: parser
 	$(CC) -c lex.yy.c -o lex.yy.o
 
-SymbolTable.o: VariableEntry
-	$(CP) -c SymbolTable.cpp -o SymbolTable.o
+SubprogramTable.o: SubprogramEntry
+	$(CP) -c SubprogramTable.cpp -o SubprogramTable.o
+
+VariableTable.o: VariableEntry
+	$(CP) -c VariableTable.cpp -o VariableTable.o
+
+SubprogramEntry:
+	$(CP) -c SubprogramEntry.cpp -o SubprogramEntry.o
 
 VariableEntry:
 	$(CP) -c VariableEntry.cpp -o VariableEntry.o

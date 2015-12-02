@@ -12,10 +12,13 @@
 #include <fstream>
 #include <cstring>
 #include <typeinfo>
+#include <list>
 
 #include "TypesTable.hpp"
-#include "SymbolTable.hpp"
 #include "VariableEntry.hpp"
+#include "VariableTable.hpp"
+#include "SubprogramEntry.hpp"
+#include "SubprogramTable.hpp"
 
 using namespace std;
 
@@ -46,13 +49,21 @@ string ignorePointers(string decl);
 
 void fileHeader();
 
-SymbolTable<VariableEntry> *env = new SymbolTable<VariableEntry>(NULL);
-
 TypesTable typesTable;
+
+VariableTable *env = new VariableTable(NULL);
+
+SubprogramTable subTable;
 
 ofstream out(fileOutputName.c_str());
 
 string typeToStore = "";
+
+string idBeingDeclared = "";
+
+list<string> parametersType;
+
+std::map<std::string, VariableEntry> vTableTemp;
 
 %}
 
@@ -94,11 +105,11 @@ string typeToStore = "";
 %token <lexeme> UNION
 %token <lexeme> WHILE
 
-%token CASE
 %token END_CASE             END_ENUM            END_FOR                 END_FUNCTION      END_IF            END_PROCEDURE
 %token END_STRUCT           END_UNION           END_WHILE
-%token FUNCTION
-%token PROCEDURE
+%token FUNCTION PROCEDURE
+
+%token CASE
 %token THEN                 TYPEOF
 %token WHEN
 
@@ -114,7 +125,9 @@ string typeToStore = "";
 %type <lexeme> arithmetic_unary_operator logical_unary_operator assignment_operator dim_expr dim_exprs
 %type <lexeme> type_specifier type_name primitive_type declarator_name primitive_type_expression user_type_expression
 %type <lexeme> variable_declarator variable_declarators variable_declaration variable_declarations
-%type <lexeme> modifier modifiers
+%type <lexeme> modifier modifiers parameter parameter_list subprogram_declarator function_declaration procedure_declaration
+%type <lexeme> subprogram_body local_variable_declaration_statement local_variable_declarations_or_statements statement
+%type <lexeme> block local_variable_declarations_and_statements
 
 %start translation_unit
 
@@ -138,57 +151,115 @@ declarations
   ;
 
 declaration
-  : function_declaration
-  | procedure_declaration
+  : function_declaration { out << $1 << endl; free($1); }
+  | procedure_declaration { out << $1 << endl; free($1); }
   | type_declaration
   | variable_declaration { out << $1 << endl; free($1); }
   ;
 
 function_declaration
-  : FUNCTION type_specifier subprogram_declarator subprogram_body END_FUNCTION
+  : FUNCTION type_specifier subprogram_declarator subprogram_body END_FUNCTION {
+      string s = string($2) + " " + string($3) + "{\n" + string($4) + "\n}\n";
+      SubprogramEntry* se = subTable.get(string(idBeingDeclared));
+      se->setReturnType(string($2));
+      idBeingDeclared = "";
+      $$ = strdup((char*) s.c_str());
+    }
   ;
 
 procedure_declaration
-  : PROCEDURE subprogram_declarator subprogram_body END_PROCEDURE
+  : PROCEDURE { $<context>p = push_context(); int a; cout << "pega merda\n"; }subprogram_declarator subprogram_body END_PROCEDURE {
+      string s = "void " + string($3) + "{\n" + string($4)+ "\n}\n";
+      int b = a;
+      pop_context($<context>p);
+      SubprogramEntry* se = subTable.get(string(idBeingDeclared));
+      se->setReturnType("");
+      idBeingDeclared = "";
+      $$ = strdup((char*) s.c_str());
+    }
   ;
 
 subprogram_declarator
-  : IDENTIFIER L_PAREN parameter_list R_PAREN
-  | IDENTIFIER L_PAREN R_PAREN
+  : IDENTIFIER L_PAREN parameter_list R_PAREN {
+      if(env->get(string($1)) == NULL && subTable.get(string($1)) == NULL) {
+        string s = string($1) + string($2) + string($3) + string($4);
+        SubprogramEntry se;
+        se.setParametersType(parametersType);
+        parametersType.clear();
+        subTable.put(string($1), se);
+        idBeingDeclared = string($1);
+        $$ = strdup((char*) s.c_str());
+      } else {
+        yyerror("Identifier name already used");
+        YYERROR;
+      }
+    }
+  | IDENTIFIER L_PAREN R_PAREN {
+      if(env->get(string($1)) == NULL && subTable.get(string($1)) == NULL) {
+        string s = string($1) + string($2) + string($3);
+        SubprogramEntry se;
+        subTable.put(string($1), se);
+        idBeingDeclared = string($1);
+        $$ = strdup((char*) s.c_str());
+      } else {
+        yyerror("Identifier name already used");
+        YYERROR;
+      }
+    }
   ;
 
 parameter_list
-  : parameter
-  | parameter_list COMMA parameter
+  : parameter { $$ = strdup($1); }
+  | parameter_list COMMA parameter {
+      string s = string($1) + string($2) + string($3);
+      $$ = strdup((char*) s.c_str());
+    }
   ;
 
 parameter
-  : type_specifier declarator_name
-  | CONST type_specifier declarator_name
+  : type_specifier declarator_name {
+      string s = string($1) + " " + string($2);
+      parametersType.push_back(string($1));
+      $$ = strdup((char*) s.c_str());
+    }
+  | CONST type_specifier declarator_name {
+      string s = string($1) + " " + string($2) + " " + string($3);
+      parametersType.push_back(string($2));
+      $$ = strdup((char*) s.c_str());
+    }
   ;
 
 subprogram_body
-  : block
-  | SEMICOLON
+  : block  { $$ = strdup($1); }
+  | SEMICOLON  { $$ = strdup($1); }
   ;
 
 block
-  : local_variable_declarations_and_statements
+  : local_variable_declarations_and_statements { $$ = strdup($1); }
   ;
 
 local_variable_declarations_and_statements
-  : local_variable_declarations_or_statements
-  | local_variable_declarations_and_statements local_variable_declarations_or_statements
+  : local_variable_declarations_or_statements { $$ = strdup($1); }
+  | local_variable_declarations_and_statements local_variable_declarations_or_statements {
+      string s = string($1) + "\n" + string($2);
+      $$ = strdup((char*) s.c_str());
+    }
   ;
 
 local_variable_declarations_or_statements
-  : local_variable_declaration_statement
-  | statement
+  : local_variable_declaration_statement { $$ = strdup($1); }
+  | statement { $$ = strdup($1); }
   ;
 
 local_variable_declaration_statement
-  : type_specifier variable_declarators SEMICOLON
-  | STATIC type_specifier variable_declarators SEMICOLON
+  : type_specifier variable_declarators SEMICOLON {
+      string s = string($1) + " " + string($2) + string($3);
+      $$ = strdup((char*) s.c_str());
+    }
+  | STATIC type_specifier variable_declarators SEMICOLON {
+      string s = string($1) + " " + string($2) + " " + string($3) + string($4);
+      $$ = strdup((char*) s.c_str());
+    }
   ;
 
 statement
@@ -394,12 +465,6 @@ variable_declarator
       if(env->get(filterIDofArray($1)) == NULL) {
         VariableEntry var(typeToStore);
         env->put(filterIDofArray($1), var);
-        /*Entry* e = env->get(filterIDofArray($1));
-        cout << "olha" << typeid(e).name() << endl;
-        size_t found = string(typeid(e).name()).find("PrimitiveTypeEntry");
-        if(found != string::npos) {
-          cout << "eh PTE@!" << endl;
-        }*/
       } else {
         yyerror("Identifier previously declared");
         YYERROR;
