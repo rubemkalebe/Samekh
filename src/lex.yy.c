@@ -1430,7 +1430,7 @@ YY_RULE_SETUP
 #line 155 "src/lexer.l"
 {
   yylval.node = (nodeType*) malloc(sizeof(nodeType));
-  yylval.node->type = "float";
+  yylval.node->type = "double";
   yylval.node->lexeme = strdup(yytext);
 	return FLOATING_POINT;
 }

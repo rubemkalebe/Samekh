@@ -135,7 +135,7 @@ std::map<std::string, VariableEntry> vTableTemp;
 
 translation_unit
   : program_file {
-      out << "int main() { return 0; }\n";
+      //out << "int main() { return 0; }\n";
       out.close();
       delete env;
     }
@@ -943,7 +943,7 @@ array_access
 
 field_access
   : postfix_expression DOT IDENTIFIER {
-      cout << "hahaha\n";
+      //cout << "hahaha\n";
     }
   ;
 

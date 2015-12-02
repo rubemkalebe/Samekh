@@ -1747,7 +1747,7 @@ yyreduce:
         case 2:
 #line 137 "src/parser.y" /* yacc.c:1646  */
     {
-      out << "int main() { return 0; }\n";
+      //out << "int main() { return 0; }\n";
       out.close();
       delete env;
     }
@@ -2856,7 +2856,7 @@ yyreduce:
   case 185:
 #line 945 "src/parser.y" /* yacc.c:1646  */
     {
-      cout << "hahaha\n";
+      //cout << "hahaha\n";
     }
 #line 2862 "src/parser.cpp" /* yacc.c:1646  */
     break;

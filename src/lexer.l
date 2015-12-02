@@ -154,7 +154,7 @@ ES  (\\(['"\?\\abfnrtv]|[0-7]{1,3}|x[a-fA-F0-9]+))
 
 [0-9]+([.][0-9]+)?([eE][+-]?[0-9]+)? {
   yylval.node = (nodeType*) malloc(sizeof(nodeType));
-  yylval.node->type = "float";
+  yylval.node->type = "double";
   yylval.node->lexeme = strdup(yytext);
 	return FLOATING_POINT;
 }

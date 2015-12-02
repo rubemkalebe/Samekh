@@ -21,9 +21,9 @@ VariableEntry* VariableTable::get(std::string lexeme) {
 bool VariableTable::isValid(std::string lexeme) {
   std::map<std::string, VariableEntry>::iterator it = table.find(lexeme);
   if(it != table.end()) {
-    return true;
-  } else {
     return false;
+  } else {
+    return true;
   }
 }
 
