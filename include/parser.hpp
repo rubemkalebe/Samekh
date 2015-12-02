@@ -30,8 +30,8 @@
    This special exception was added by the Free Software Foundation in
    version 2.2 of Bison.  */
 
-#ifndef YY_YY_PARSER_HPP_INCLUDED
-# define YY_YY_PARSER_HPP_INCLUDED
+#ifndef YY_YY_SRC_PARSER_HPP_INCLUDED
+# define YY_YY_SRC_PARSER_HPP_INCLUDED
 /* Debug traces.  */
 #ifndef YYDEBUG
 # define YYDEBUG 0
@@ -40,7 +40,7 @@
 extern int yydebug;
 #endif
 /* "%code requires" blocks.  */
-#line 70 "parser.y" /* yacc.c:1909  */
+#line 70 "src/parser.y" /* yacc.c:1909  */
 
   typedef struct {
     char* type;     /* type associated */
@@ -49,7 +49,7 @@ extern int yydebug;
 
   nodeType* copyNode(nodeType* orig);
 
-#line 53 "parser.hpp" /* yacc.c:1909  */
+#line 53 "src/parser.hpp" /* yacc.c:1909  */
 
 /* Token type.  */
 #ifndef YYTOKENTYPE
@@ -154,12 +154,12 @@ extern int yydebug;
 typedef union YYSTYPE YYSTYPE;
 union YYSTYPE
 {
-#line 79 "parser.y" /* yacc.c:1909  */
+#line 79 "src/parser.y" /* yacc.c:1909  */
 
 	char* lexeme;
   nodeType* node;
 
-#line 163 "parser.hpp" /* yacc.c:1909  */
+#line 163 "src/parser.hpp" /* yacc.c:1909  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
@@ -170,4 +170,4 @@ extern YYSTYPE yylval;
 
 int yyparse (void);
 
-#endif /* !YY_YY_PARSER_HPP_INCLUDED  */
+#endif /* !YY_YY_SRC_PARSER_HPP_INCLUDED  */

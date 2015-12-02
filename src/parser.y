@@ -168,10 +168,8 @@ function_declaration
   ;
 
 procedure_declaration
-  : PROCEDURE { $<context>p = push_context(); int a; cout << "pega merda\n"; }subprogram_declarator subprogram_body END_PROCEDURE {
+  : PROCEDURE { int a; cout << "pega merda\n"; }subprogram_declarator subprogram_body END_PROCEDURE {
       string s = "void " + string($3) + "{\n" + string($4)+ "\n}\n";
-      int b = a;
-      pop_context($<context>p);
       SubprogramEntry* se = subTable.get(string(idBeingDeclared));
       se->setReturnType("");
       idBeingDeclared = "";

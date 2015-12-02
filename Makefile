@@ -1,43 +1,45 @@
 # DEFINIÇÃO DAS VARIÁVEIS ( OPCIONAL )
 LEX=flex
 YACC=bison
-CC=gcc
 CP=g++
-LEXFILE=lexer.l
+LEXFILE=src/lexer.l
 LEXPARAM=-ll
 YACCPARAM=-d
-YACCFILE=parser.y
-EXECUTABLE=parserTest
+YACCFILE=src/parser.y
+EXECUTABLE=sam
+INC=include/
+SRC=src/
+OBJ=obj/
 
 main: lex.yy.o VariableTable.o TypesTable SubprogramTable.o
-	$(CP) lex.yy.o VariableTable.o VariableEntry.o TypesTable.o SubprogramTable.o SubprogramEntry.o parserTest.cpp -o $(EXECUTABLE)
+	$(CP) -I $(INC) $(OBJ)lex.yy.o $(OBJ)VariableTable.o $(OBJ)VariableEntry.o $(OBJ)TypesTable.o $(OBJ)SubprogramTable.o $(OBJ)SubprogramEntry.o $(SRC)parserTest.cpp -o $(EXECUTABLE)
 
 lex.yy.o: parser
-	$(CC) -c lex.yy.c -o lex.yy.o
+	$(CC) -c -I $(INC) $(SRC)lex.yy.c -o $(OBJ)lex.yy.o
 
 SubprogramTable.o: SubprogramEntry
-	$(CP) -c SubprogramTable.cpp -o SubprogramTable.o
+	$(CP) -c -I $(INC) $(SRC)SubprogramTable.cpp -o $(OBJ)SubprogramTable.o
 
 VariableTable.o: VariableEntry
-	$(CP) -c VariableTable.cpp -o VariableTable.o
+	$(CP) -c -I $(INC) $(SRC)VariableTable.cpp -o $(OBJ)VariableTable.o
 
 SubprogramEntry:
-	$(CP) -c SubprogramEntry.cpp -o SubprogramEntry.o
+	$(CP) -c -I $(INC) $(SRC)SubprogramEntry.cpp -o $(OBJ)SubprogramEntry.o
 
 VariableEntry:
-	$(CP) -c VariableEntry.cpp -o VariableEntry.o
+	$(CP) -c -I $(INC) $(SRC)VariableEntry.cpp -o $(OBJ)VariableEntry.o
 
 TypesTable:
-	$(CP) -c TypesTable.cpp -o TypesTable.o
+	$(CP) -c -I $(INC) $(SRC)TypesTable.cpp -o $(OBJ)TypesTable.o
 
-parser: parser.y lexer
-	$(YACC) $(YACCPARAM) $(YACCFILE) -o parser.cpp
+parser: lexer
+	$(YACC) $(YACCPARAM) $(YACCFILE) -o $(SRC)parser.cpp ; mv $(SRC)parser.hpp include/
 
-lexer: lexer.l
-	$(LEX) $(LEXFILE)
+lexer:
+	$(LEX) $(LEXFILE) ; mv lex.yy.c src/
 
 clean:
-	rm lex.yy.c
-	rm lex.yy.o
-	rm parser.hpp
-	rm parser.cpp
+	rm $(SRC)lex.yy.c
+	rm $(INC)parser.hpp
+	rm $(SRC)parser.cpp
+	rm $(OBJ)*.o
