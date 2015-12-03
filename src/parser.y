@@ -169,7 +169,7 @@ function_declaration
 
 procedure_declaration
   : PROCEDURE subprogram_declarator subprogram_body END_PROCEDURE {
-      string s = "void " + string($3) + "{\n" + string($4)+ "\n}\n";
+      string s = "void " + string($2) + "{\n" + string($3)+ "\n}\n";
       SubprogramEntry* se = subTable.get(string(idBeingDeclared));
       se->setReturnType("");
       idBeingDeclared = "";
